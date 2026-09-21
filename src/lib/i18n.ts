@@ -31,6 +31,18 @@ export interface Translations {
   plateTectonicsMap: string;
   showTectonicMap: string;
   hideTectonicMap: string;
+  comparativeBench: string;
+  comparativeSubtitle: string;
+  specimensArchive: string;
+  paleoRadar: string;
+  allCategories: string;
+  fossils: string;
+  paradoxAncient: string;
+  paradoxFuture: string;
+  titans: string;
+  pagePrev: string;
+  pageNext: string;
+  pageOf: string;
 }
 
 export const DICTIONARY: Record<Language, Translations> = {
@@ -65,6 +77,18 @@ export const DICTIONARY: Record<Language, Translations> = {
     plateTectonicsMap: 'CONTINENTAL DRIFT TIMELINE (300 MYA — PRESENT)',
     showTectonicMap: 'VIEW TECTONIC ATLAS',
     hideTectonicMap: 'RETURN TO CODEX',
+    comparativeBench: 'COMPARATIVE ANATOMY',
+    comparativeSubtitle: 'Side-by-side morphological divergence and elemental delta between species',
+    specimensArchive: 'SPECIMEN CATALOG',
+    paleoRadar: 'PALEO-RADAR',
+    allCategories: 'All Specimens',
+    fossils: 'Primordial Fossils',
+    paradoxAncient: 'Ancient Paradox',
+    paradoxFuture: 'Future Paradox',
+    titans: 'Apex Titans',
+    pagePrev: 'Prev',
+    pageNext: 'Next',
+    pageOf: 'Page',
   },
 
   id: {
@@ -98,6 +122,18 @@ export const DICTIONARY: Record<Language, Translations> = {
     plateTectonicsMap: 'GARIS WAKTU PERGESERAN LEMPENG (300 JUTA TAHUN LALU — KINI)',
     showTectonicMap: 'BUKA ATLAS TEKTONIK',
     hideTectonicMap: 'KEMBALI KE KODEKS',
+    comparativeBench: 'ANATOMI KOMPARATIF',
+    comparativeSubtitle: 'Komparasi divergensi morfologi dan delta inti elemen antar dua spesies',
+    specimensArchive: 'KATALOG SPESIMEN',
+    paleoRadar: 'RADAR PALEO',
+    allCategories: 'Semua Spesimen',
+    fossils: 'Fosil Purba',
+    paradoxAncient: 'Paradoks Purba',
+    paradoxFuture: 'Paradoks Masa Depan',
+    titans: 'Titan Purba',
+    pagePrev: 'Sebelumnya',
+    pageNext: 'Berikutnya',
+    pageOf: 'Halaman',
   },
 
   ja: {
@@ -131,6 +167,18 @@ export const DICTIONARY: Record<Language, Translations> = {
     plateTectonicsMap: '大陸移動タイムライン（3億年前〜現代）',
     showTectonicMap: '大陸テクトニクス地図を開く',
     hideTectonicMap: '図鑑に戻る',
+    comparativeBench: '比較解剖学',
+    comparativeSubtitle: '2種のポケモンの形態学的分岐と属性炉エネルギーの比較観察',
+    specimensArchive: '標本カタログ',
+    paleoRadar: '古生物レーダー',
+    allCategories: '全標本',
+    fossils: '古代の化石',
+    paradoxAncient: '古代パラドックス',
+    paradoxFuture: '未来パラドックス',
+    titans: '頂点タイタン',
+    pagePrev: '前へ',
+    pageNext: '次へ',
+    pageOf: 'ページ',
   },
 };
 

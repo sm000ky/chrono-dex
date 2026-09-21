@@ -24,11 +24,27 @@ Inspect any of the 1,025 Pokémon with four scientific diagnostic layers:
 * **Layer III: Biochemical Elemental Core** — Internal bio-reactor elemental organs (pyro-sacs, electrocyte batteries, cryo-proteins, acid lymph glands).
 * **Layer IV: Tectonic Speciation & Historical Epoch** — Continental plate drift phenomena explaining evolutionary adaptations.
 
-### 3. Interactive Continental Drift Tectonic Map
-An interactive vector cartography view demonstrating the breakup of the supercontinent into modern regional plates (Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar, Paldea) and the temporal vortex of Area Zero.
+### 3. Interactive Comparative Anatomy Duel Bench
+Analyze morphological divergence between two distinct Pokémon specimens side-by-side:
+* **Comparative Metric Gauges** — Real-time computation of Bone Density Index delta, stature variance, and mass disparity.
+* **Cross-Layer Dual Slicer** — Inspect skeletal radiograms and bio-reactor outputs simultaneously across paired species (e.g. Charizard vs. Gyarados, Omanyte vs. Great Tusk).
 
-### 4. Technical Stack
+### 4. Interactive Continental Drift Tectonic Map & Phylogeny Tree
+* **Vector Cartography** — Visualizes the supercontinental breakup into 9 modern regional plates (Kanto, Johto, Hoenn, Sinnoh, Unova, Kalos, Alola, Galar, Paldea) and the Area Zero vortex.
+* **300-Million-Year Tree of Life** — Deep phylogenetic branches mapping elemental lineage divergence from ancient common ancestors.
+
+### 5. Paleo-Radar & High-Performance Specimen Vault
+* **Paleo-Radar Filters** — Instant categorization into Primordial Fossils, Ancient Paradox beasts, Future Paradox cyberforms, and Apex Titans.
+* **Paginated Lightweight Grid** — 24 items per page for silky smooth 60fps interaction on mobile viewports (Poco F7 Pro friendly).
+
+### 6. Tactile Cockpit Aesthetic
+* **Zero Blinking** — Strictly steady illuminated glows, tactile deboss & engraving, organic paper float, and mechanical needle sway.
+* **Trilingual Localization** — Full English, Indonesian, and Japanese translations.
+
+---
+
+### Technical Stack
 * React 19 + TypeScript + Vite
 * Tailwind CSS
 * Web Audio API (100% synthetic, zero audio files loaded)
-* Trilingual Localization: English, Indonesian, Japanese
+* Deployed on Vercel

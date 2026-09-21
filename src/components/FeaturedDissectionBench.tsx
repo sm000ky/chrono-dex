@@ -158,9 +158,9 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
               {isBrushMode && fossilExcavatedPercent < 100 && (
                 <div
                   onClick={handleDustFossil}
-                  className="absolute inset-0 rounded-xl bg-[#4A3525]/90 border-2 border-[#D97706] backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer p-4 text-center z-30 select-none"
+                  className="absolute inset-0 rounded-xl bg-[#4A3525]/90 border-2 border-[#D97706] backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer p-4 text-center z-30 select-none shadow-[inset_0_2px_12px_rgba(0,0,0,0.8)]"
                 >
-                  <Brush className="w-8 h-8 text-[#D97706] animate-bounce mb-2" />
+                  <Brush className="w-8 h-8 text-[#D97706] drop-shadow-[0_0_8px_rgba(217,119,6,0.6)] mb-2" />
                   <span className="font-bold text-xs text-[#FEF3C7] uppercase tracking-wider">
                     TAP TO BRUSH FOSSIL STRATA
                   </span>
@@ -192,11 +192,11 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                 onClick={handleStimulateOrgan}
                 className={`px-3 py-1.5 rounded-lg border font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
                   isStimulated
-                    ? 'bg-amber-500 text-black border-amber-300 scale-105 shadow-md'
+                    ? 'bg-amber-500 text-black border-amber-300 scale-105 shadow-[0_0_15px_rgba(245,158,11,0.7)] font-extrabold'
                     : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-400'
                 }`}
               >
-                <Radio className={`w-3.5 h-3.5 ${isStimulated ? 'animate-pulse' : ''}`} />
+                <Radio className={`w-3.5 h-3.5 ${isStimulated ? 'drop-shadow-[0_0_8px_currentColor]' : ''}`} />
                 <span>{isStimulated ? 'DISCHARGING ENERGY!' : 'Stimulate Bio-Organ'}</span>
               </button>
 

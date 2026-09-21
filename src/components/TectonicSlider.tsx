@@ -55,6 +55,21 @@ export const TectonicSlider: React.FC<TectonicSliderProps> = ({
             <span className="truncate">{t.epochLabel} 0{activeEpoch.number} // {activeEpoch.timeEra}</span>
           </div>
 
+          {/* Mechanical Needle Sway Epoch Meter */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full border border-current/30 bg-black/15">
+            <span className="text-[9px] uppercase tracking-wider opacity-70">GEOLOGICAL DIAL</span>
+            <div className="relative w-8 h-4 overflow-hidden flex items-end justify-center">
+              <div
+                className="w-0.5 h-3.5 bg-current rounded-full origin-bottom transition-transform duration-500 ease-out"
+                style={{
+                  transform: `rotate(${-45 + currentEpochIndex * 22.5}deg)`,
+                  backgroundColor: activeEpoch.accentHex,
+                }}
+              />
+              <div className="w-1.5 h-1.5 rounded-full bg-current absolute bottom-0" />
+            </div>
+          </div>
+
           <div className={`flex items-center gap-1.5 text-[11px] px-3 py-1 rounded-full border border-current/30 bg-black/10 flex-shrink-0 font-semibold ${textColor}`}>
             <Palette className="w-3.5 h-3.5 flex-shrink-0" style={{ color: activeEpoch.accentHex }} />
             <span className="truncate">{t.artStyle}: <strong style={{ color: activeEpoch.accentHex }}>{activeEpoch.styleName}</strong></span>
