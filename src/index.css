@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+body {
+  background-color: #FAF6EE;
+  color: #1E252B;
+  font-family: 'Newsreader', Georgia, serif;
+  overflow-x: hidden;
+}
+
+/* =========================================================================
+ * 5 GEOLOGICAL EPOCH THEMES & ARCHIVAL STYLES
+ * ========================================================================= */
+
+/* Epoch 1: Primordial Pangea (Cave Painting & Stone Petroglyph) */
+.epoch-primordial {
+  background-color: #261811;
+  color: #F5EBE1;
+  --theme-accent: #D97706;
+  --theme-border: #78350F;
+  --theme-card: #382419;
+}
+
+/* Epoch 2: Mesozoic Drift (Ernst Haeckel & Da Vinci Sepia Codex) */
+.epoch-drift {
+  background-color: #F4ECE1;
+  color: #2D2318;
+  --theme-accent: #B8781B;
+  --theme-border: #C5A059;
+  --theme-card: #FAF6EE;
+}
+
+/* Epoch 3: Feudal Hisui (Ukiyo-e Woodblock & Sumi-e Washi) */
+.epoch-feudal {
+  background-color: #1C241E;
+  color: #F3EFE6;
+  --theme-accent: #D4AF37;
+  --theme-border: #8C3A2E;
+  --theme-card: #27332A;
+}
+
+/* Epoch 4: Victorian & Modern (Copperplate Etching & Naturalist Guide) */
+.epoch-modern {
+  background-color: #FAF6EE;
+  color: #1E252B;
+  --theme-accent: #D95A47;
+  --theme-border: #DEC6AE;
+  --theme-card: #FDFBF7;
+}
+
+/* Epoch 5: Paradox Horizon (Holographic Cyber Blueprint) */
+.epoch-future {
+  background-color: #0B1120;
+  color: #E2E8F0;
+  --theme-accent: #38BDF8;
+  --theme-border: #0284C7;
+  --theme-card: #0F172A;
+}
+
+/* Archival Paper Grains */
+.paper-grain {
+  background-image: radial-gradient(rgba(30, 37, 43, 0.08) 1px, transparent 0);
+  background-size: 8px 8px;
+}
+
+.blueprint-grid {
+  background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.petroglyph-stone {
+  background-image: radial-gradient(rgba(217, 119, 6, 0.12) 1px, transparent 0);
+  background-size: 12px 12px;
+}
+
+.washi-grain {
+  background-image: radial-gradient(rgba(212, 175, 55, 0.08) 1px, transparent 0);
+  background-size: 10px 10px;
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(30, 37, 43, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(30, 37, 43, 0.3);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 37, 43, 0.5);
+}
