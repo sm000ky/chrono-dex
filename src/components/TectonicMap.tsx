@@ -54,10 +54,10 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
             style={{ color: activeEpoch.accentHex }}
           >
             <Globe className="w-4 h-4 flex-shrink-0" />
-            <span className="truncate">{t.plateTectonicsMap}</span>
+            <span className="break-words">{t.plateTectonicsMap}</span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={handleTriggerDrift}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-lg border text-[11px] font-bold tracking-wider uppercase transition-all cursor-pointer shadow-sm ${
@@ -246,7 +246,7 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
           return (
             <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-2.5 animate-in fade-in min-w-0">
               <div className="flex items-center justify-between text-xs font-bold gap-2 min-w-0" style={{ color: activeEpoch.accentHex }}>
-                <span className="truncate min-w-0 flex-1">{t.cratonTelemetryLabel} {selectedPlate}</span>
+                <span className="break-words min-w-0 flex-1">{t.cratonTelemetryLabel} {selectedPlate}</span>
                 <button
                   onClick={() => setSelectedPlate(null)}
                   className="cursor-pointer text-xs opacity-70 hover:opacity-100 flex-shrink-0 px-2 py-0.5 rounded border border-current/30"

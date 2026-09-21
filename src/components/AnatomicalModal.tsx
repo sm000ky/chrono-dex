@@ -348,21 +348,21 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
           {/* DEDICATED SEPARATE STATUS STRIP (NO OVERLAPPING!) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs min-w-0">
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.viewingLayerLabel}</span>
-              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>{t.layerXof4.replace('{layer}', String(activeLayer))}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold break-words max-w-full leading-tight ${style.subtext}`}>{t.viewingLayerLabel}</span>
+              <strong className={`text-xs sm:text-sm break-words max-w-full leading-tight mt-0.5 ${style.accentText}`}>{t.layerXof4.replace('{layer}', String(activeLayer))}</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.timeEpochLabel}</span>
-              <strong className="text-xs sm:text-sm truncate max-w-full">{pokemon.epoch.time_label}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold break-words max-w-full leading-tight ${style.subtext}`}>{t.timeEpochLabel}</span>
+              <strong className="text-xs sm:text-sm break-words max-w-full leading-tight mt-0.5">{pokemon.epoch.time_label}</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.tectonicRegionLabel}</span>
-              <strong className="text-[11px] sm:text-xs leading-tight break-words max-w-full line-clamp-2 text-center">{pokemon.epoch.epoch_name}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold break-words max-w-full leading-tight ${style.subtext}`}>{t.tectonicRegionLabel}</span>
+              <strong className="text-[11px] sm:text-xs leading-tight break-words max-w-full text-center mt-0.5">{pokemon.epoch.epoch_name}</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.boneDensityLabel}</span>
-              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold break-words max-w-full leading-tight ${style.subtext}`}>{t.boneDensityLabel}</span>
+              <strong className={`text-xs sm:text-sm break-words max-w-full leading-tight mt-0.5 ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
             </div>
           </div>
 
@@ -389,7 +389,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className="flex flex-wrap items-center justify-between text-xs gap-2 min-w-0">
                 <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5 min-w-0`}>
                   <Shield className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{pokemon.anatomy.layer_1_dermis.title}</span>
+                  <span className="break-words">{pokemon.anatomy.layer_1_dermis.title}</span>
                 </span>
                 <span className={`text-xs font-bold flex-shrink-0 ${style.subtext}`}>{pokemon.anatomy.layer_1_dermis.integument_type}</span>
               </div>
@@ -410,7 +410,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className="flex flex-wrap items-center justify-between text-xs gap-2 min-w-0">
                 <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5 min-w-0`}>
                   <Activity className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{pokemon.anatomy.layer_2_osteology.title}</span>
+                  <span className="break-words">{pokemon.anatomy.layer_2_osteology.title}</span>
                 </span>
                 <span className={`text-xs font-bold flex-shrink-0 ${style.accentText}`}>
                   {t.boneDensityLabel}: {pokemon.anatomy.layer_2_osteology.bone_density_index}
@@ -445,7 +445,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className="flex flex-wrap items-center justify-between text-xs gap-2 min-w-0">
                 <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5 min-w-0`}>
                   <Zap className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{pokemon.anatomy.layer_3_elemental_core.title}</span>
+                  <span className="break-words">{pokemon.anatomy.layer_3_elemental_core.title}</span>
                 </span>
                 <span className="text-xs font-bold flex-shrink-0">{t.bioReactorBadge}</span>
               </div>
@@ -480,7 +480,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className="flex flex-wrap items-center justify-between text-xs gap-2 min-w-0">
                 <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5 min-w-0`}>
                   <Globe className="w-4 h-4 flex-shrink-0" />
-                  <span className="truncate">{pokemon.anatomy.layer_4_geologic_speciation.title}</span>
+                  <span className="break-words">{pokemon.anatomy.layer_4_geologic_speciation.title}</span>
                 </span>
                 <span className="text-xs font-bold flex-shrink-0">{pokemon.anatomy.layer_4_geologic_speciation.time_era}</span>
               </div>

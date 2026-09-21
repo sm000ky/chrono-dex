@@ -142,7 +142,7 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-[#E07A28] min-w-0">
               <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate">{t.workbenchSubtitle}</span>
+              <span className="break-words">{t.workbenchSubtitle}</span>
             </div>
             <h2 className="text-xl sm:text-3xl font-serif font-bold tracking-tight break-words">
               {t.workbenchHeading}
@@ -182,10 +182,10 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
             <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:14px_14px] opacity-10 pointer-events-none" />
 
             {/* Chamber Status Bar */}
-            <div className="w-full flex items-center justify-between gap-2 border-b border-current/20 pb-2 text-[10px] z-10 min-w-0">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold truncate">
+            <div className="w-full flex flex-wrap items-center justify-between gap-2 border-b border-current/20 pb-2 text-[10px] z-10 min-w-0">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold min-w-0 flex-1">
                 <Scan className="w-3.5 h-3.5 flex-shrink-0" />
-                <span className="truncate">{t.chamberLabel} #{String(specimen.national_id).padStart(4, '0')} · {specimen.name}</span>
+                <span className="break-words min-w-0">{t.chamberLabel} #{String(specimen.national_id).padStart(4, '0')} · {specimen.name}</span>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
                 <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-black/40 border border-current/20">
@@ -485,9 +485,9 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
             <div className="p-4 sm:p-5 rounded-xl border-2 border-current/20 bg-black/10 min-h-[160px] flex flex-col justify-between space-y-3 min-w-0">
               {activeLayer === 1 && (
                 <div className="space-y-2 animate-in fade-in min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400 gap-2 min-w-0">
-                    <span className="truncate">{specimen.anatomy.layer_1_dermis.title}</span>
-                    <span className="truncate flex-shrink-0">{specimen.anatomy.layer_1_dermis.integument_type}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold text-amber-400 gap-1 sm:gap-2 min-w-0">
+                    <span className="break-words">{specimen.anatomy.layer_1_dermis.title}</span>
+                    <span className="text-[11px] sm:text-xs opacity-90 flex-shrink-0">{specimen.anatomy.layer_1_dermis.integument_type}</span>
                   </div>
                   <p className="font-serif text-sm leading-relaxed italic break-words">
                     "{specimen.anatomy.layer_1_dermis.description}"
@@ -502,11 +502,11 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
               {activeLayer === 2 && (
                 <div className="space-y-2 animate-in fade-in min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400 gap-2 min-w-0">
-                    <span className="truncate">{specimen.anatomy.layer_2_osteology.title}</span>
-                    <span className="truncate flex-shrink-0">{t.boneDensityLabel}: {specimen.anatomy.layer_2_osteology.bone_density_index}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold text-amber-400 gap-1 sm:gap-2 min-w-0">
+                    <span className="break-words">{specimen.anatomy.layer_2_osteology.title}</span>
+                    <span className="text-[11px] sm:text-xs opacity-90 flex-shrink-0">{t.boneDensityLabel}: {specimen.anatomy.layer_2_osteology.bone_density_index}</span>
                   </div>
-                  <div className="text-xs font-mono font-semibold">
+                  <div className="text-xs font-mono font-semibold break-words">
                     {t.frameworkLabel} <span className="text-amber-300">{specimen.anatomy.layer_2_osteology.skeleton_type}</span>
                   </div>
                   <p className="font-serif text-sm leading-relaxed italic break-words">
@@ -517,19 +517,19 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
               {activeLayer === 3 && (
                 <div className="space-y-2 animate-in fade-in min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400 gap-2 min-w-0">
-                    <span className="flex items-center gap-1 truncate">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold text-amber-400 gap-1 sm:gap-2 min-w-0">
+                    <span className="flex items-center gap-1.5 break-words">
                       <Flame className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="truncate">{specimen.anatomy.layer_3_elemental_core.primary_organ}</span>
+                      <span className="break-words">{specimen.anatomy.layer_3_elemental_core.primary_organ}</span>
                     </span>
-                    <span className="flex-shrink-0">{t.bioReactorBadge}</span>
+                    <span className="text-[11px] sm:text-xs opacity-90 flex-shrink-0">{t.bioReactorBadge}</span>
                   </div>
                   <p className="font-serif text-sm leading-relaxed italic break-words">
                     {specimen.anatomy.layer_3_elemental_core.primary_organ_desc}
                   </p>
                   {specimen.anatomy.layer_3_elemental_core.secondary_organ && (
                     <div className="pt-2 border-t border-current/15 text-xs">
-                      <span className="font-bold text-cyan-400 block truncate">
+                      <span className="font-bold text-cyan-400 block break-words">
                         {t.secondaryLabel} {specimen.anatomy.layer_3_elemental_core.secondary_organ}
                       </span>
                       <p className="font-serif italic opacity-80 break-words mt-0.5">
@@ -542,14 +542,14 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
               {activeLayer === 4 && (
                 <div className="space-y-2 animate-in fade-in min-w-0">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-400 gap-2 min-w-0">
-                    <span className="truncate">{specimen.anatomy.layer_4_geologic_speciation.title}</span>
-                    <span className="truncate flex-shrink-0">{specimen.anatomy.layer_4_geologic_speciation.time_era}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold text-amber-400 gap-1 sm:gap-2 min-w-0">
+                    <span className="break-words">{specimen.anatomy.layer_4_geologic_speciation.title}</span>
+                    <span className="text-[11px] sm:text-xs opacity-90 flex-shrink-0">{specimen.anatomy.layer_4_geologic_speciation.time_era}</span>
                   </div>
                   <p className="font-serif text-sm leading-relaxed italic break-words">
                     "{specimen.anatomy.layer_4_geologic_speciation.speciation_notes}"
                   </p>
-                  <div className="text-[11px] opacity-75 font-mono pt-1">
+                  <div className="text-[11px] opacity-75 font-mono pt-1 break-words">
                     {t.tectonicTriggerLabel} <strong className="text-amber-400">{specimen.anatomy.layer_4_geologic_speciation.tectonic_event}</strong>
                   </div>
                 </div>

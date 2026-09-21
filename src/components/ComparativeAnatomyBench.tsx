@@ -239,7 +239,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             )}
             {activeLayer === 3 && (
               <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
-                <span className="truncate max-w-full">{t.primaryOrganLabel}: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
+                <span className="break-words max-w-full">{t.primaryOrganLabel}: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
@@ -293,7 +293,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
               <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
                 <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
                   <span className="flex-shrink-0">{t.tectonicEraLabel}</span>
-                  <span className="font-bold truncate">{specimenA.anatomy.layer_4_geologic_speciation.time_era}</span>
+                  <span className="font-bold break-words">{specimenA.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
                 <p className="text-[11px] opacity-80 break-words">{specimenA.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
               </div>
@@ -372,7 +372,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             )}
             {activeLayer === 3 && (
               <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
-                <span className="truncate max-w-full">{t.primaryOrganLabel}: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
+                <span className="break-words max-w-full">{t.primaryOrganLabel}: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
@@ -426,7 +426,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
               <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
                 <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
                   <span className="flex-shrink-0">{t.tectonicEraLabel}</span>
-                  <span className="font-bold truncate">{specimenB.anatomy.layer_4_geologic_speciation.time_era}</span>
+                  <span className="font-bold break-words">{specimenB.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
                 <p className="text-[11px] opacity-80 break-words">{specimenB.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
               </div>
