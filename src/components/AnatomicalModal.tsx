@@ -11,6 +11,9 @@ import {
   Globe,
   Zap,
   Flame,
+  Info,
+  Sliders,
+  Crosshair
 } from 'lucide-react';
 
 interface AnatomicalModalProps {
@@ -26,11 +29,15 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   t,
   activeEpochId,
 }) => {
-  const [activeLayer, setActiveLayer] = useState<number>(1); // 1 to 4
+  const [activeLayer, setActiveLayer] = useState<number>(1);
+  const [peelOpacity, setPeelOpacity] = useState<number>(100); // 0 = Skeleton/Core, 100 = Dermis
+  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
   useEffect(() => {
     if (pokemon) {
       setActiveLayer(1);
+      setPeelOpacity(100);
+      setActiveHotspot(null);
       chronoAudio.playLayerPeel(1);
     }
   }, [pokemon]);
@@ -48,110 +55,137 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   const handleLayerChange = (layerNum: number) => {
     chronoAudio.playLayerPeel(layerNum);
     setActiveLayer(layerNum);
+    setActiveHotspot(null);
   };
 
-  // 5 Distinct High-Contrast Modal Themes per Era
-  const getModalTheme = () => {
+  // 5 COMPLETELY DIFFERENT BOX ARCHITECTURES FOR EACH ERA
+  const getEraStructure = () => {
     switch (activeEpochId) {
       case 'primordial':
         return {
-          bg: 'bg-[#1C100B] text-[#F7EFE8] border-4 border-[#8C3E1B] shadow-[0_0_50px_rgba(0,0,0,0.8)]',
-          card: 'bg-[#29170E] border border-[#8C3E1B]',
+          wrapper: 'bg-[#180E07] text-[#F5EBE1] border-4 border-[#8C3E1B] rounded-none shadow-[0_0_60px_rgba(0,0,0,0.95)]',
+          frameStyle: 'outline outline-2 outline-[#E07A28] outline-offset-4',
+          header: 'bg-[#0E0703] border-b-2 border-[#8C3E1B] p-4 sm:p-6',
+          titleFont: 'font-serif uppercase tracking-widest text-[#E07A28]',
+          tabActive: 'bg-[#E07A28] text-black font-bold border-2 border-[#E07A28]',
+          tabInactive: 'bg-[#24150D] text-[#D2BA9F] border border-[#8C3E1B] hover:bg-[#341F14]',
+          stageBg: 'bg-[#100904] border-2 border-[#8C3E1B]',
+          card: 'bg-[#22130B] border border-[#8C3E1B] text-[#F5EBE1]',
+          accentText: 'text-[#E07A28]',
           subtext: 'text-[#D2BA9F]',
-          accent: 'text-[#E07A28]',
-          headerBg: 'bg-[#120A06] border-b-2 border-[#8C3E1B]',
-          tabActive: 'bg-[#E07A28] text-black font-bold border-[#E07A28] shadow-paper-sm',
-          tabInactive: 'bg-[#1C100B] text-[#D2BA9F] border-[#8C3E1B]/60 hover:bg-[#29170E]',
-          innerMat: 'bg-[#2E1B11] border border-[#8C3E1B]/50',
+          badge: 'bg-[#3A1F11] text-[#E07A28] border border-[#8C3E1B]',
+          hotspotColor: 'bg-amber-500 text-black border-amber-300',
         };
       case 'drift':
         return {
-          bg: 'bg-[#FAF3E3] text-[#1C1309] border-4 border-[#B38F56] shadow-paper-lg',
-          card: 'bg-[#F2E7D0] border-2 border-[#B38F56]/60',
+          wrapper: 'bg-[#F9F3E3] text-[#1A1108] border-8 border-[#CBB282] rounded-xl shadow-2xl',
+          frameStyle: 'ring-4 ring-[#8A6225]/40',
+          header: 'bg-[#EDE2C8] border-b-2 border-[#B38F56] p-4 sm:p-6',
+          titleFont: 'font-serif font-bold text-[#6D4C1B]',
+          tabActive: 'bg-[#8A6225] text-white font-bold border-2 border-[#5E4216] shadow-sm',
+          tabInactive: 'bg-[#F5EBD4] text-[#1A1108] border border-[#B38F56] hover:bg-[#EDE2C8]',
+          stageBg: 'bg-[#FFFDF7] border-2 border-[#B38F56]/60 shadow-inner',
+          card: 'bg-[#FFF9EE] border-2 border-[#B38F56]/50 text-[#1A1108] shadow-sm',
+          accentText: 'text-[#8A6225]',
           subtext: 'text-[#4A3A26]',
-          accent: 'text-[#8A6225]',
-          headerBg: 'bg-[#EFE3C8] border-b-2 border-[#B38F56]',
-          tabActive: 'bg-[#8A6225] text-white font-bold border-[#8A6225] shadow-paper-sm',
-          tabInactive: 'bg-[#FAF3E3] text-[#1C1309] border-[#B38F56] hover:bg-[#EFE3C8]',
-          innerMat: 'bg-[#FFF9EE] border-2 border-[#B38F56]/50 shadow-inner',
+          badge: 'bg-[#EAE0C8] text-[#1A1108] border border-[#B38F56] font-semibold',
+          hotspotColor: 'bg-[#8A6225] text-white border-[#5E4216]',
         };
       case 'feudal':
         return {
-          bg: 'bg-[#101712] text-[#F8F6EF] border-4 border-[#991B1B] shadow-[0_0_50px_rgba(0,0,0,0.9)]',
-          card: 'bg-[#19241D] border border-[#991B1B]/60',
+          wrapper: 'bg-[#0E1612] text-[#F8F6EF] border-4 border-[#991B1B] rounded-2xl shadow-[0_0_60px_rgba(0,0,0,0.95)]',
+          frameStyle: 'border-double border-8 border-[#D4AF37]/50',
+          header: 'bg-[#060B08] border-b-2 border-[#991B1B] p-4 sm:p-6',
+          titleFont: 'font-serif font-bold text-[#D4AF37]',
+          tabActive: 'bg-[#991B1B] text-[#FFF] font-bold border-2 border-[#D4AF37] shadow-sm',
+          tabInactive: 'bg-[#15201A] text-[#C3D1C8] border border-[#991B1B]/60 hover:bg-[#1E2E25]',
+          stageBg: 'bg-[#080D0A] border-2 border-[#D4AF37]/40',
+          card: 'bg-[#141E18] border border-[#D4AF37]/30 text-[#F8F6EF]',
+          accentText: 'text-[#D4AF37]',
           subtext: 'text-[#C3D1C8]',
-          accent: 'text-[#D4AF37]',
-          headerBg: 'bg-[#0A100C] border-b-2 border-[#991B1B]',
-          tabActive: 'bg-[#991B1B] text-white font-bold border-[#D4AF37] shadow-paper-sm',
-          tabInactive: 'bg-[#101712] text-[#C3D1C8] border-[#991B1B]/50 hover:bg-[#19241D]',
-          innerMat: 'bg-[#1D2B22] border border-[#D4AF37]/40',
+          badge: 'bg-[#223328] text-[#D4AF37] border border-[#D4AF37]/40',
+          hotspotColor: 'bg-[#991B1B] text-white border-[#D4AF37]',
         };
       case 'modern':
         return {
-          bg: 'bg-[#FAF7F2] text-[#111827] border-4 border-[#1E252B] shadow-[8px_8px_0px_#1E252B]',
-          card: 'bg-white border-2 border-[#1E252B]',
+          wrapper: 'bg-[#FFFFFF] text-[#111827] border-4 border-[#1E252B] rounded-none shadow-[12px_12px_0px_#1E252B]',
+          frameStyle: '',
+          header: 'bg-[#F3F0EA] border-b-4 border-[#1E252B] p-4 sm:p-6',
+          titleFont: 'font-serif font-bold text-[#111827]',
+          tabActive: 'bg-[#1E252B] text-white font-bold border-2 border-[#1E252B]',
+          tabInactive: 'bg-white text-[#111827] border-2 border-[#1E252B] hover:bg-[#F3F0EA]',
+          stageBg: 'bg-[#F9F8F6] border-2 border-[#1E252B]',
+          card: 'bg-[#FFFFFF] border-2 border-[#1E252B] text-[#111827] shadow-[4px_4px_0px_#1E252B]',
+          accentText: 'text-[#C53030]',
           subtext: 'text-[#374151]',
-          accent: 'text-[#C53030]',
-          headerBg: 'bg-[#EAE6DE] border-b-2 border-[#1E252B]',
-          tabActive: 'bg-[#1E252B] text-white font-bold border-[#1E252B]',
-          tabInactive: 'bg-white text-[#111827] border-[#1E252B] hover:bg-[#EAE6DE]',
-          innerMat: 'bg-[#F9F8F6] border-2 border-[#1E252B]/20 shadow-inner',
+          badge: 'bg-[#E5E2D9] text-[#111827] border border-[#1E252B] font-bold',
+          hotspotColor: 'bg-[#C53030] text-white border-[#1E252B]',
         };
       case 'future':
       default:
         return {
-          bg: 'bg-[#040814] text-[#F0F9FF] border-4 border-[#0284C7] shadow-[0_0_50px_rgba(6,182,212,0.3)]',
-          card: 'bg-[#0C1322] border border-cyan-500/40',
+          wrapper: 'bg-[#030712] text-[#F0F9FF] border-2 border-[#0284C7] rounded-3xl shadow-[0_0_70px_rgba(6,182,212,0.35)]',
+          frameStyle: 'outline outline-1 outline-[#38BDF8]/60 outline-offset-4',
+          header: 'bg-[#02040A] border-b border-cyan-500/40 p-4 sm:p-6',
+          titleFont: 'font-mono font-bold text-[#38BDF8] tracking-widest',
+          tabActive: 'bg-[#0284C7] text-white font-bold border border-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.5)]',
+          tabInactive: 'bg-[#0B1324] text-[#94A3B8] border border-cyan-500/30 hover:bg-[#121E38]',
+          stageBg: 'bg-[#02050E] border border-cyan-500/40',
+          card: 'bg-[#0A1224] border border-cyan-500/40 text-[#F0F9FF]',
+          accentText: 'text-[#38BDF8]',
           subtext: 'text-[#94A3B8]',
-          accent: 'text-[#38BDF8]',
-          headerBg: 'bg-[#02040A] border-b-2 border-cyan-500/50',
-          tabActive: 'bg-[#38BDF8] text-black font-bold border-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.5)]',
-          tabInactive: 'bg-[#040814] text-[#94A3B8] border-cyan-500/30 hover:bg-[#0C1322]',
-          innerMat: 'bg-[#02050E] border border-cyan-500/30',
+          badge: 'bg-[#0F1D38] text-[#38BDF8] border border-cyan-500/40',
+          hotspotColor: 'bg-[#38BDF8] text-black border-cyan-200 shadow-[0_0_10px_#38BDF8]',
         };
     }
   };
 
-  const theme = getModalTheme();
+  const style = getEraStructure();
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md select-none font-mono transition-all duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-black/85 backdrop-blur-md select-none font-mono"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden paper-grain animate-in zoom-in-95 duration-200 ${theme.bg}`}
+        className={`relative w-full max-w-5xl max-h-[94vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 ${style.wrapper} ${style.frameStyle}`}
       >
-        {/* Top Header Rail */}
-        <div className={`p-4 sm:p-6 flex items-center justify-between gap-3 ${theme.headerBg}`}>
-          <div className="space-y-0.5">
-            <div className={`text-[10px] uppercase font-bold tracking-widest ${theme.accent} flex items-center gap-1.5`}>
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>NATURALIST DOSSIER // #{String(pokemon.national_id).padStart(4, '0')}</span>
+        {/* Top Header */}
+        <div className={`flex items-center justify-between gap-3 ${style.header}`}>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className={`px-2.5 py-0.5 rounded text-[10px] tracking-wider uppercase font-bold ${style.badge}`}>
+                SPECIES #{String(pokemon.national_id).padStart(4, '0')}
+              </span>
+              <span className={`text-xs font-bold ${style.accentText}`}>
+                {pokemon.epoch.time_label}
+              </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">
-              {pokemon.name} <span className="text-xs font-mono opacity-70">({pokemon.japanese_name})</span>
+
+            <h2 className={`text-2xl sm:text-3xl font-bold tracking-tight ${style.titleFont}`}>
+              {pokemon.name} <span className="text-sm opacity-60">({pokemon.japanese_name})</span>
             </h2>
-            <div className="italic font-serif text-sm font-semibold">
-              {t.binomialTaxonomy}: <span className={theme.accent}>{pokemon.binomial_name}</span>
+
+            <div className={`text-xs font-serif italic ${style.subtext}`}>
+              Taxonomia Binomial: <strong className={style.accentText}>{pokemon.binomial_name}</strong>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl border-2 border-current hover:bg-black/20 transition-colors cursor-pointer"
+            className="p-2.5 rounded-lg border-2 border-current hover:bg-black/20 transition-all cursor-pointer"
             title={t.close}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Tactile Layer Slicer Controller */}
-        <div className="p-3 border-b border-current/20 bg-black/10 flex items-center justify-between gap-2 overflow-x-auto">
-          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">
+        {/* Tactile Layer Selection Ribbon */}
+        <div className="px-4 py-2.5 border-b border-current/20 bg-black/10 flex items-center justify-between gap-2 overflow-x-auto">
+          <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider flex-shrink-0">
             <Layers className="w-4 h-4" />
-            <span className="hidden sm:inline">{t.layerSlicer}:</span>
+            <span className="hidden sm:inline">ANATOMICAL SLICES:</span>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -164,8 +198,8 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <button
                 key={layer.num}
                 onClick={() => handleLayerChange(layer.num)}
-                className={`px-3 py-1.5 rounded-lg border text-[10px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                  activeLayer === layer.num ? theme.tabActive : theme.tabInactive
+                className={`px-3 py-1.5 rounded-md text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  activeLayer === layer.num ? style.tabActive : style.tabInactive
                 }`}
               >
                 {layer.label}
@@ -174,181 +208,246 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Inspection Chamber Body */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6">
-          {/* Main Visual Chamber with High-Contrast Inner Mat */}
-          <div className={`relative p-6 rounded-2xl flex flex-col items-center justify-center min-h-[280px] overflow-hidden ${theme.innerMat}`}>
+        {/* Modal Body Container */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+          {/* Visual Examination Chamber */}
+          <div className={`relative p-6 sm:p-8 rounded-xl flex flex-col items-center justify-center min-h-[300px] overflow-hidden ${style.stageBg}`}>
             {/* Background grid */}
             <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
 
-            {/* Specimen Visual Filtered by Layer */}
-            <div
-              className={`relative z-10 transform scale-110 sm:scale-125 transition-all duration-500 my-4 ${
-                activeLayer === 2
-                  ? 'filter invert brightness-125 contrast-150 hue-rotate-180 drop-shadow-[0_0_20px_rgba(56,189,248,0.7)]'
-                  : activeLayer === 3
-                  ? 'filter drop-shadow-[0_0_25px_rgba(245,158,11,0.8)] contrast-125 saturate-150'
-                  : activeLayer === 4
-                  ? 'filter sepia(70%) drop-shadow-[2px_4px_8px_rgba(0,0,0,0.4)]'
-                  : 'drop-shadow-[3px_5px_8px_rgba(0,0,0,0.25)]'
-              }`}
-            >
+            {/* Visual Specimen with Interactive Layers */}
+            <div className="relative z-10 w-full max-w-sm aspect-square flex items-center justify-center my-2">
+              {/* Layer 2/3 Underlay (Skeleton/Internal Organ) */}
+              {(activeLayer === 2 || activeLayer === 3) && (
+                <img
+                  src={pokemon.sprites.artwork}
+                  alt={pokemon.name}
+                  className={`absolute inset-0 w-full h-full object-contain filter transition-all duration-300 ${
+                    activeLayer === 2
+                      ? 'invert brightness-125 contrast-200 hue-rotate-180 drop-shadow-[0_0_25px_rgba(56,189,248,0.8)]'
+                      : 'drop-shadow-[0_0_30px_rgba(245,158,11,0.9)] contrast-150 saturate-200'
+                  }`}
+                />
+              )}
+
+              {/* Layer 1 Dermis Overlay with Interactive Peel Slider */}
               <img
                 src={pokemon.sprites.artwork}
                 alt={pokemon.name}
-                className="max-h-56 sm:max-h-64 object-contain"
+                style={{ opacity: activeLayer === 1 ? 1 : peelOpacity / 100 }}
+                className={`relative z-10 w-full h-full object-contain transition-opacity duration-200 ${
+                  activeEpochId === 'primordial'
+                    ? 'sepia-[0.4] contrast-125'
+                    : activeEpochId === 'drift'
+                    ? 'sepia-[0.35] contrast-110'
+                    : activeEpochId === 'future'
+                    ? 'drop-shadow-[0_0_15px_rgba(56,189,248,0.6)]'
+                    : ''
+                }`}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = pokemon.sprites.icon;
                 }}
               />
+
+              {/* Interactive Organ Hotspot Pins */}
+              {activeLayer === 3 && (
+                <>
+                  <button
+                    onClick={() => setActiveHotspot('cranial')}
+                    className={`absolute top-[28%] left-[48%] -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] border-2 cursor-pointer z-20 ${style.hotspotColor}`}
+                    title="Cranial Energy Center"
+                  >
+                    1
+                  </button>
+                  <button
+                    onClick={() => setActiveHotspot('elemental')}
+                    className={`absolute top-[52%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] border-2 cursor-pointer z-20 ${style.hotspotColor}`}
+                    title="Elemental Synthesis Reactor"
+                  >
+                    2
+                  </button>
+                  <button
+                    onClick={() => setActiveHotspot('appendage')}
+                    className={`absolute bottom-[24%] right-[32%] w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] border-2 cursor-pointer z-20 ${style.hotspotColor}`}
+                    title="Locomotive Conductor"
+                  >
+                    3
+                  </button>
+                </>
+              )}
             </div>
 
-            {/* Active Layer Tag Badge */}
-            <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px] text-white">
-              VIEWING: <span className="font-bold text-[#F59E0B]">LAYER {activeLayer}</span>
-            </div>
+            {/* Peel Slider when in Layer 2 or 3 */}
+            {(activeLayer === 2 || activeLayer === 3) && (
+              <div className="w-full max-w-xs mt-3 flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-lg border border-current/20 z-10 text-[11px]">
+                <Sliders className="w-3.5 h-3.5 opacity-80" />
+                <span className="font-bold text-[10px] uppercase whitespace-nowrap">Peel Skin:</span>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={peelOpacity}
+                  onChange={(e) => setPeelOpacity(Number(e.target.value))}
+                  className="w-full accent-amber-500 cursor-pointer"
+                />
+                <span className="font-mono text-[10px] w-8 text-right">{peelOpacity}%</span>
+              </div>
+            )}
+          </div>
 
-            <div className="absolute bottom-3 right-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px] text-white">
-              ERA: <span className="font-bold">{pokemon.epoch.time_label}</span>
+          {/* DEDICATED SEPARATE STATUS STRIP (NO OVERLAPPING!) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>VIEWING LAYER</span>
+              <strong className={`text-sm ${style.accentText}`}>LAYER {activeLayer} OF 4</strong>
+            </div>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>TIME EPOCH</span>
+              <strong className="text-sm truncate">{pokemon.epoch.time_label}</strong>
+            </div>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>TECTONIC REGION</span>
+              <strong className="text-sm truncate">{pokemon.epoch.epoch_name}</strong>
+            </div>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>BONE DENSITY</span>
+              <strong className={`text-sm ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
             </div>
           </div>
 
-          {/* ===============================================================
-           * LAYER 1: DERMIS & EPIDERMAL INTEGUMENT
-           * =============================================================== */}
+          {/* Hotspot Info Banner if clicked */}
+          {activeHotspot && activeLayer === 3 && (
+            <div className={`p-3 rounded-lg border flex items-center justify-between gap-3 animate-in fade-in ${style.card}`}>
+              <div className="flex items-center gap-2 text-xs">
+                <Crosshair className={`w-4 h-4 ${style.accentText}`} />
+                <span>
+                  {activeHotspot === 'cranial' && `[PIN 1: Cranial Bio-Capacitor] Neural node channeling ${pokemon.types[0]} frequency waves.`}
+                  {activeHotspot === 'elemental' && `[PIN 2: ${pokemon.anatomy.layer_3_elemental_core.primary_organ}] ${pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}`}
+                  {activeHotspot === 'appendage' && `[PIN 3: Peripheral Conductor] Musculoskeletal kinetic conduits discharging kinetic torque.`}
+                </span>
+              </div>
+              <button onClick={() => setActiveHotspot(null)} className="opacity-70 hover:opacity-100">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* LAYER 1: DERMIS */}
           {activeLayer === 1 && (
-            <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl space-y-2 ${theme.card}`}>
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
-                    <Shield className="w-4 h-4" />
-                    <span>{pokemon.anatomy.layer_1_dermis.title}</span>
-                  </span>
-                  <span className={`text-[10px] font-bold ${theme.subtext}`}>{pokemon.anatomy.layer_1_dermis.integument_type}</span>
-                </div>
-                <p className="font-serif text-sm sm:text-base leading-relaxed italic">
-                  "{pokemon.anatomy.layer_1_dermis.description}"
-                </p>
-                <div className={`pt-2 text-xs border-t border-current/15 flex flex-wrap gap-4 font-semibold ${theme.subtext}`}>
-                  <span>{t.height}: <strong>{pokemon.height_m} m</strong></span>
-                  <span>{t.weight}: <strong>{pokemon.weight_kg} kg</strong></span>
-                  <span>TYPES: <strong>{pokemon.types.join(' / ')}</strong></span>
-                </div>
+            <div className={`p-5 rounded-xl space-y-3 ${style.card}`}>
+              <div className="flex items-center justify-between text-xs">
+                <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5`}>
+                  <Shield className="w-4 h-4" />
+                  <span>{pokemon.anatomy.layer_1_dermis.title}</span>
+                </span>
+                <span className={`text-xs font-bold ${style.subtext}`}>{pokemon.anatomy.layer_1_dermis.integument_type}</span>
+              </div>
+              <p className="font-serif text-sm sm:text-base leading-relaxed italic">
+                "{pokemon.anatomy.layer_1_dermis.description}"
+              </p>
+              <div className={`pt-3 border-t border-current/15 flex flex-wrap gap-4 text-xs font-semibold ${style.subtext}`}>
+                <span>{t.height}: <strong className="text-current">{pokemon.height_m} m</strong></span>
+                <span>{t.weight}: <strong className="text-current">{pokemon.weight_kg} kg</strong></span>
+                <span>TYPES: <strong className="text-current">{pokemon.types.join(' / ')}</strong></span>
               </div>
             </div>
           )}
 
-          {/* ===============================================================
-           * LAYER 2: OSTEOLOGY & SKELETAL FRAMEWORK
-           * =============================================================== */}
+          {/* LAYER 2: OSTEOLOGY */}
           {activeLayer === 2 && (
-            <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
-                    <Activity className="w-4 h-4" />
-                    <span>{pokemon.anatomy.layer_2_osteology.title}</span>
-                  </span>
-                  <span className={`text-[10px] font-bold ${theme.accent}`}>
-                    {t.boneDensity}: {pokemon.anatomy.layer_2_osteology.bone_density_index}
-                  </span>
-                </div>
+            <div className={`p-5 rounded-xl space-y-3 ${style.card}`}>
+              <div className="flex items-center justify-between text-xs">
+                <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5`}>
+                  <Activity className="w-4 h-4" />
+                  <span>{pokemon.anatomy.layer_2_osteology.title}</span>
+                </span>
+                <span className={`text-xs font-bold ${style.accentText}`}>
+                  DENSITY: {pokemon.anatomy.layer_2_osteology.bone_density_index}
+                </span>
+              </div>
 
-                <div className="text-sm font-bold">
-                  Skeletal Architecture: <span className={theme.accent}>{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
-                </div>
+              <div className="text-sm font-bold">
+                Framework: <span className={style.accentText}>{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
+              </div>
 
-                <p className="font-serif text-sm sm:text-base leading-relaxed italic">
-                  "{pokemon.anatomy.layer_2_osteology.description}"
-                </p>
+              <p className="font-serif text-sm sm:text-base leading-relaxed italic">
+                "{pokemon.anatomy.layer_2_osteology.description}"
+              </p>
 
-                {/* Base Stat Metric Bars */}
-                <div className="pt-2 border-t border-current/15 space-y-1.5 text-[11px]">
-                  <div className={`text-[10px] uppercase font-bold ${theme.subtext}`}>{t.baseStats} (BST: {pokemon.stats.bst})</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-semibold">
-                    <div>HP: <strong>{pokemon.stats.hp}</strong></div>
-                    <div>ATK: <strong>{pokemon.stats.attack}</strong></div>
-                    <div>DEF: <strong>{pokemon.stats.defense}</strong></div>
-                    <div>SP.ATK: <strong>{pokemon.stats.special_attack}</strong></div>
-                    <div>SP.DEF: <strong>{pokemon.stats.special_defense}</strong></div>
-                    <div>SPEED: <strong>{pokemon.stats.speed}</strong></div>
-                  </div>
+              <div className="pt-3 border-t border-current/15 space-y-1.5 text-xs">
+                <div className={`text-[10px] uppercase font-bold ${style.subtext}`}>{t.baseStats} (BST: {pokemon.stats.bst})</div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-semibold">
+                  <div>HP: <strong>{pokemon.stats.hp}</strong></div>
+                  <div>ATK: <strong>{pokemon.stats.attack}</strong></div>
+                  <div>DEF: <strong>{pokemon.stats.defense}</strong></div>
+                  <div>SP.ATK: <strong>{pokemon.stats.special_attack}</strong></div>
+                  <div>SP.DEF: <strong>{pokemon.stats.special_defense}</strong></div>
+                  <div>SPEED: <strong>{pokemon.stats.speed}</strong></div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ===============================================================
-           * LAYER 3: BIOCHEMICAL ELEMENTAL CORE
-           * =============================================================== */}
+          {/* LAYER 3: ELEMENTAL CORE */}
           {activeLayer === 3 && (
-            <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
-                    <Zap className="w-4 h-4" />
-                    <span>{pokemon.anatomy.layer_3_elemental_core.title}</span>
-                  </span>
-                  <span className="text-[10px] font-bold">{t.elementalReactor}</span>
-                </div>
+            <div className={`p-5 rounded-xl space-y-4 ${style.card}`}>
+              <div className="flex items-center justify-between text-xs">
+                <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5`}>
+                  <Zap className="w-4 h-4" />
+                  <span>{pokemon.anatomy.layer_3_elemental_core.title}</span>
+                </span>
+                <span className="text-xs font-bold">{t.elementalReactor}</span>
+              </div>
 
-                {/* Primary Organ */}
-                <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
-                  <div className={`text-xs font-bold ${theme.accent} flex items-center gap-1.5`}>
-                    <Flame className="w-3.5 h-3.5" />
-                    <span>PRIMARY ORGAN: {pokemon.anatomy.layer_3_elemental_core.primary_organ}</span>
+              <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5">
+                <div className={`text-xs font-bold ${style.accentText} flex items-center gap-1.5`}>
+                  <Flame className="w-4 h-4" />
+                  <span>PRIMARY: {pokemon.anatomy.layer_3_elemental_core.primary_organ}</span>
+                </div>
+                <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
+                  {pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}
+                </p>
+              </div>
+
+              {pokemon.anatomy.layer_3_elemental_core.secondary_organ && (
+                <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5">
+                  <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+                    <Zap className="w-4 h-4" />
+                    <span>SECONDARY: {pokemon.anatomy.layer_3_elemental_core.secondary_organ}</span>
                   </div>
                   <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
-                    {pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}
+                    {pokemon.anatomy.layer_3_elemental_core.secondary_organ_desc}
                   </p>
                 </div>
-
-                {/* Secondary Organ if dual type */}
-                {pokemon.anatomy.layer_3_elemental_core.secondary_organ && (
-                  <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
-                    <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
-                      <Zap className="w-3.5 h-3.5" />
-                      <span>SECONDARY ORGAN: {pokemon.anatomy.layer_3_elemental_core.secondary_organ}</span>
-                    </div>
-                    <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
-                      {pokemon.anatomy.layer_3_elemental_core.secondary_organ_desc}
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           )}
 
-          {/* ===============================================================
-           * LAYER 4: TECTONIC SPECIATION & GEOLOGICAL ORIGIN
-           * =============================================================== */}
+          {/* LAYER 4: TECTONIC SPECIATION */}
           {activeLayer === 4 && (
-            <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
-                <div className="flex items-center justify-between text-xs">
-                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
-                    <Globe className="w-4 h-4" />
-                    <span>{pokemon.anatomy.layer_4_geologic_speciation.title}</span>
-                  </span>
-                  <span className="text-[10px] font-bold">{pokemon.anatomy.layer_4_geologic_speciation.time_era}</span>
-                </div>
+            <div className={`p-5 rounded-xl space-y-4 ${style.card}`}>
+              <div className="flex items-center justify-between text-xs">
+                <span className={`font-bold uppercase tracking-wider ${style.accentText} flex items-center gap-1.5`}>
+                  <Globe className="w-4 h-4" />
+                  <span>{pokemon.anatomy.layer_4_geologic_speciation.title}</span>
+                </span>
+                <span className="text-xs font-bold">{pokemon.anatomy.layer_4_geologic_speciation.time_era}</span>
+              </div>
 
-                <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
-                  <div className={`text-xs font-bold ${theme.accent}`}>
-                    TECTONIC PHENOMENON: {pokemon.anatomy.layer_4_geologic_speciation.tectonic_event}
-                  </div>
-                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
-                    "{pokemon.anatomy.layer_4_geologic_speciation.speciation_notes}"
-                  </p>
+              <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5">
+                <div className={`text-xs font-bold ${style.accentText}`}>
+                  TECTONIC TRIGGER: {pokemon.anatomy.layer_4_geologic_speciation.tectonic_event}
                 </div>
+                <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
+                  "{pokemon.anatomy.layer_4_geologic_speciation.speciation_notes}"
+                </p>
+              </div>
 
-                {/* Pokedex Archival Note */}
-                <div className="space-y-1 pt-1">
-                  <div className={`text-[10px] uppercase font-bold ${theme.subtext}`}>CANONICAL FIELD OBSERVATION:</div>
-                  <p className={`font-serif text-xs sm:text-sm leading-relaxed italic border-l-2 pl-3`} style={{ borderColor: 'currentColor' }}>
-                    "{pokemon.description}"
-                  </p>
-                </div>
+              <div className="space-y-1.5 pt-1">
+                <div className={`text-[10px] uppercase font-bold ${style.subtext}`}>FIELD NATURALIST LOG:</div>
+                <p className="font-serif text-xs sm:text-sm leading-relaxed italic border-l-2 pl-3" style={{ borderColor: 'currentColor' }}>
+                  "{pokemon.description}"
+                </p>
               </div>
             </div>
           )}
