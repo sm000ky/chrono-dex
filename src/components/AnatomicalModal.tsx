@@ -38,6 +38,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   const [activeLayer, setActiveLayer] = useState<number>(1);
   const [peelOpacity, setPeelOpacity] = useState<number>(100); // 0 = Skeleton/Core, 100 = Dermis
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  const [isShiny, setIsShiny] = useState<boolean>(false);
 
   const currentIndex = pokemon && pokemonList ? pokemonList.findIndex((p) => p.id === pokemon.id) : -1;
   const prevPokemon = currentIndex > 0 && pokemonList ? pokemonList[currentIndex - 1] : null;
@@ -55,6 +56,11 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
       chronoAudio.playLayerPeel(1);
       onNavigatePokemon(nextPokemon);
     }
+  };
+
+  const handleToggleShiny = () => {
+    chronoAudio.playShinySparkle();
+    setIsShiny((prev) => !prev);
   };
 
   useEffect(() => {
@@ -77,6 +83,13 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   }, [onClose, prevPokemon, nextPokemon]);
 
   if (!pokemon) return null;
+
+  const artworkSrc = isShiny
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${pokemon.id}.png`
+    : pokemon.sprites.artwork;
+  const iconFallbackSrc = isShiny
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`
+    : pokemon.sprites.icon;
 
   const handleLayerChange = (layerNum: number) => {
     chronoAudio.playLayerPeel(layerNum);
@@ -187,6 +200,20 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <span className={`text-xs font-bold ${style.accentText} truncate`}>
                 {pokemon.epoch.time_label}
               </span>
+              {/* Shiny Toggle Button */}
+              <button
+                type="button"
+                onClick={handleToggleShiny}
+                className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-bold font-mono tracking-wider transition-all cursor-pointer ${
+                  isShiny
+                    ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
+                    : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                }`}
+                title={t.shinyTooltip}
+              >
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>{isShiny ? t.shinyActive : t.shinyNormal}</span>
+              </button>
             </div>
 
             <h2 className={`text-xl sm:text-3xl font-bold tracking-tight break-words ${style.titleFont}`}>
@@ -268,10 +295,18 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
             {/* Visual Specimen with Interactive Layers */}
             <div className="relative z-10 w-full max-w-sm aspect-square flex items-center justify-center my-2">
+              {/* Shiny Chromatic Badge inside Chamber */}
+              {isShiny && (
+                <div className="absolute top-0 right-0 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400 text-amber-300 font-mono text-[9px] font-bold tracking-widest uppercase shadow-[0_0_12px_rgba(245,158,11,0.3)] flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>{t.shinyActive}</span>
+                </div>
+              )}
+
               {/* Layer 2/3 Underlay (Skeleton/Internal Organ) */}
               {(activeLayer === 2 || activeLayer === 3) && (
                 <img
-                  src={pokemon.sprites.artwork}
+                  src={artworkSrc}
                   alt={pokemon.name}
                   className={`absolute inset-0 w-full h-full object-contain filter transition-all duration-300 ${
                     activeLayer === 2
@@ -283,7 +318,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
               {/* Layer 1 Dermis Overlay with Interactive Peel Slider */}
               <img
-                src={pokemon.sprites.artwork}
+                src={artworkSrc}
                 alt={pokemon.name}
                 style={{ opacity: activeLayer === 1 ? 1 : peelOpacity / 100 }}
                 className={`relative z-10 w-full h-full object-contain transition-opacity duration-200 ${
@@ -296,7 +331,11 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                     : ''
                 }`}
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = pokemon.sprites.icon;
+                  const target = e.target as HTMLImageElement;
+                  if (!target.dataset.fallback) {
+                    target.dataset.fallback = 'true';
+                    target.src = iconFallbackSrc;
+                  }
                 }}
               />
 

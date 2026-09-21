@@ -8,7 +8,8 @@ import {
   Activity,
   Flame,
   Globe,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Sparkles
 } from 'lucide-react';
 
 interface ComparativeAnatomyBenchProps {
@@ -36,9 +37,35 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
   const [activeLayer, setActiveLayer] = useState<number>(1);
   const [specimenAId, setSpecimenAId] = useState<number>(6); // Charizard
   const [specimenBId, setSpecimenBId] = useState<number>(130); // Gyarados
+  const [isShinyA, setIsShinyA] = useState<boolean>(false);
+  const [isShinyB, setIsShinyB] = useState<boolean>(false);
 
   const specimenA = pokemonList.find((p) => p.national_id === specimenAId) || pokemonList[0];
   const specimenB = pokemonList.find((p) => p.national_id === specimenBId) || pokemonList[1];
+
+  const artworkSrcA = isShinyA
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimenA.id}.png`
+    : specimenA.sprites.artwork;
+  const iconFallbackA = isShinyA
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimenA.id}.png`
+    : specimenA.sprites.icon;
+
+  const artworkSrcB = isShinyB
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimenB.id}.png`
+    : specimenB.sprites.artwork;
+  const iconFallbackB = isShinyB
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimenB.id}.png`
+    : specimenB.sprites.icon;
+
+  const handleToggleShinyA = () => {
+    chronoAudio.playShinySparkle();
+    setIsShinyA((prev) => !prev);
+  };
+
+  const handleToggleShinyB = () => {
+    chronoAudio.playShinySparkle();
+    setIsShinyB((prev) => !prev);
+  };
 
   const handleSelectLayer = (layer: number) => {
     chronoAudio.playLayerPeel(layer);
@@ -49,6 +76,9 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
     chronoAudio.playLayerPeel(2);
     setSpecimenAId(specimenBId);
     setSpecimenBId(specimenAId);
+    const tempShiny = isShinyA;
+    setIsShinyA(isShinyB);
+    setIsShinyB(tempShiny);
   };
 
   const handleSelectDuo = (idA: number, idB: number) => {
@@ -198,7 +228,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     chronoAudio.playLayerPeel(1);
                     setSpecimenAId(Number(e.target.value));
                   }}
-                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
+                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[170px] truncate"
                   title={t.switchSpecimenAlpha}
                 >
                   {pokemonList.map((p) => (
@@ -207,6 +237,19 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     </option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  onClick={handleToggleShinyA}
+                  className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                    isShinyA
+                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
+                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                  }`}
+                  title={t.shinyTooltip}
+                >
+                  <Sparkles className="w-2.5 h-2.5" />
+                  <span>{isShinyA ? '★ SHINY' : 'SHINY'}</span>
+                </button>
               </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenA.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenA.binomial_name}</p>
@@ -226,11 +269,18 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
           {/* Visual Display */}
           <div className="relative aspect-video flex items-center justify-center p-4 bg-black/20 rounded-lg border border-current/10 overflow-hidden mb-4">
             <img
-              src={specimenA.sprites.artwork}
+              src={artworkSrcA}
               alt={specimenA.name}
               className={`max-h-full object-contain transition-all duration-300 ${
                 activeLayer === 2 ? 'filter invert hue-rotate-180 brightness-125 contrast-150' : ''
               }`}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (!target.dataset.fallback) {
+                  target.dataset.fallback = 'true';
+                  target.src = iconFallbackA;
+                }
+              }}
             />
             {activeLayer === 2 && (
               <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 border border-cyan-400 text-cyan-300 font-mono text-[9px] rounded">
@@ -331,7 +381,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     chronoAudio.playLayerPeel(1);
                     setSpecimenBId(Number(e.target.value));
                   }}
-                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
+                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[170px] truncate"
                   title={t.switchSpecimenBeta}
                 >
                   {pokemonList.map((p) => (
@@ -340,6 +390,19 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     </option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  onClick={handleToggleShinyB}
+                  className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                    isShinyB
+                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
+                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                  }`}
+                  title={t.shinyTooltip}
+                >
+                  <Sparkles className="w-2.5 h-2.5" />
+                  <span>{isShinyB ? '★ SHINY' : 'SHINY'}</span>
+                </button>
               </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenB.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenB.binomial_name}</p>
@@ -359,11 +422,18 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
           {/* Visual Display */}
           <div className="relative aspect-video flex items-center justify-center p-4 bg-black/20 rounded-lg border border-current/10 overflow-hidden mb-4">
             <img
-              src={specimenB.sprites.artwork}
+              src={artworkSrcB}
               alt={specimenB.name}
               className={`max-h-full object-contain transition-all duration-300 ${
                 activeLayer === 2 ? 'filter invert hue-rotate-180 brightness-125 contrast-150' : ''
               }`}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (!target.dataset.fallback) {
+                  target.dataset.fallback = 'true';
+                  target.src = iconFallbackB;
+                }
+              }}
             />
             {activeLayer === 2 && (
               <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 border border-cyan-400 text-cyan-300 font-mono text-[9px] rounded">

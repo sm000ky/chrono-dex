@@ -58,8 +58,21 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
   const [fossilExcavatedPercent, setFossilExcavatedPercent] = useState<number>(0);
   const [isBrushMode, setIsBrushMode] = useState<boolean>(false);
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  const [isShiny, setIsShiny] = useState<boolean>(false);
 
   const specimen = pokemonList.find((p) => p.id === selectedId) || pokemonList[0];
+
+  const artworkSrc = isShiny
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimen.id}.png`
+    : specimen.sprites.artwork;
+  const iconFallbackSrc = isShiny
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimen.id}.png`
+    : specimen.sprites.icon;
+
+  const handleToggleShiny = () => {
+    chronoAudio.playShinySparkle();
+    setIsShiny((prev) => !prev);
+  };
 
   const handleSelectSpecimen = (id: number) => {
     chronoAudio.playLayerPeel(1);
@@ -196,10 +209,18 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
             {/* Specimen Visual Stage */}
             <div className="relative z-10 w-full max-w-xs aspect-square flex items-center justify-center my-3">
+              {/* Shiny Chromatic Badge inside Chamber */}
+              {isShiny && (
+                <div className="absolute top-0 right-0 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400 text-amber-300 font-mono text-[9px] font-bold tracking-widest uppercase shadow-[0_0_12px_rgba(245,158,11,0.3)] flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>{t.shinyActive}</span>
+                </div>
+              )}
+
               {/* Underlying Skeleton/Elemental Core */}
               {(activeLayer === 2 || activeLayer === 3 || diagnosticMode !== 'standard') && (
                 <img
-                  src={specimen.sprites.artwork}
+                  src={artworkSrc}
                   alt={specimen.name}
                   className={`absolute inset-0 w-full h-full object-contain filter transition-all duration-300 ${getImageFilterStyle()}`}
                 />
@@ -207,7 +228,7 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
               {/* Surface Dermis with Interactive Scalpel Peel */}
               <img
-                src={specimen.sprites.artwork}
+                src={artworkSrc}
                 alt={specimen.name}
                 style={{
                   opacity: diagnosticMode === 'standard' && activeLayer === 1 ? 1 : peelPercent / 100,
@@ -219,7 +240,7 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                   const target = e.target as HTMLImageElement;
                   if (!target.dataset.fallback) {
                     target.dataset.fallback = 'true';
-                    target.src = specimen.sprites.icon;
+                    target.src = iconFallbackSrc;
                   }
                 }}
               />
@@ -361,6 +382,21 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
               >
                 <Radio className="w-3.5 h-3.5" />
                 <span>{isStimulated ? t.btnStimulateDischarging : t.btnStimulateNormal}</span>
+              </button>
+
+              {/* Shiny Morph Toggle Button */}
+              <button
+                type="button"
+                onClick={handleToggleShiny}
+                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                  isShiny
+                    ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
+                    : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                }`}
+                title={t.shinyTooltip}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{isShiny ? t.shinyActive : t.shinyNormal}</span>
               </button>
 
               {/* Fossil Excavation Tool Button */}

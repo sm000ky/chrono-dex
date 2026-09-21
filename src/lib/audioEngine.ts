@@ -573,6 +573,39 @@ class ChronoAudioEngine {
       // ignore
     }
   }
+
+  /**
+   * Crystalline high-frequency sparkle shimmer when toggling Shiny form
+   */
+  public playShinySparkle(): void {
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
+    try {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const t = this.ctx.currentTime;
+      const pitches = [1046.5, 1318.51, 1567.98, 2093.0]; // C6, E6, G6, C7
+      pitches.forEach((freq, idx) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + idx * 0.045);
+
+        gain.gain.setValueAtTime(0.0001, t + idx * 0.045);
+        gain.gain.linearRampToValueAtTime(0.07, t + idx * 0.045 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.045 + 0.45);
+
+        osc.connect(gain);
+        gain.connect(this.masterGain!);
+
+        osc.start(t + idx * 0.045);
+        osc.stop(t + idx * 0.045 + 0.5);
+      });
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export const chronoAudio = new ChronoAudioEngine();

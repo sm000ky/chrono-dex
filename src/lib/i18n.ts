@@ -168,6 +168,10 @@ export interface Translations {
   noPrevSpecimen: string;
   noNextSpecimen: string;
   typesLabel: string;
+  shinyLabel: string;
+  shinyActive: string;
+  shinyNormal: string;
+  shinyTooltip: string;
 }
 
 export const DICTIONARY: Record<Language, Translations> = {
@@ -330,6 +334,10 @@ export const DICTIONARY: Record<Language, Translations> = {
     noPrevSpecimen: 'No previous specimen',
     noNextSpecimen: 'No next specimen',
     typesLabel: 'TYPES:',
+    shinyLabel: 'Shiny Morph',
+    shinyActive: '★ SHINY MORPH',
+    shinyNormal: 'Shiny Morph',
+    shinyTooltip: 'Toggle rare chromatic shiny genetic coloration',
   },
 
   id: {
@@ -491,6 +499,10 @@ export const DICTIONARY: Record<Language, Translations> = {
     noPrevSpecimen: 'Tidak ada spesimen sebelumnya',
     noNextSpecimen: 'Tidak ada spesimen berikutnya',
     typesLabel: 'TIPE ELEMEN:',
+    shinyLabel: 'Varian Berkilau (Shiny)',
+    shinyActive: '★ VARIAN BERKILAU',
+    shinyNormal: 'Varian Berkilau (Shiny)',
+    shinyTooltip: 'Alihkan ke mutasi kromatik langka (Shiny)',
   },
 
   ja: {
@@ -652,6 +664,10 @@ export const DICTIONARY: Record<Language, Translations> = {
     noPrevSpecimen: '前の標本はありません',
     noNextSpecimen: '次の標本はありません',
     typesLabel: '属性タイプ:',
+    shinyLabel: '色違い変異体 (Shiny)',
+    shinyActive: '★ 色違い変異体',
+    shinyNormal: '色違い変異体 (Shiny)',
+    shinyTooltip: '希少な色違い色素変異形態に切り替える',
   },
 };
 
