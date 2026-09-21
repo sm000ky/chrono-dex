@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { EpochId, TectonicPlate } from '../types';
 import { EPOCHS, Translations } from '../lib/i18n';
 import { chronoAudio } from '../lib/audioEngine';
-import { Mountain, Compass, Globe, Info, Sparkles } from 'lucide-react';
+import { Globe, Play, RotateCcw, Info, Sparkles, Activity } from 'lucide-react';
 
 interface TectonicMapProps {
   currentEpochIndex: number;
@@ -16,63 +16,86 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
   onFilterType,
 }) => {
   const activeEpoch = EPOCHS[currentEpochIndex];
+  const isLightEra = activeEpoch.id === 'drift' || activeEpoch.id === 'modern';
   const [selectedPlate, setSelectedPlate] = useState<string | null>(null);
+  const [isDrifting, setIsDrifting] = useState<boolean>(false);
 
   const handlePlateClick = (plateName: string) => {
     chronoAudio.playLayerPeel(1);
     setSelectedPlate(selectedPlate === plateName ? null : plateName);
   };
 
+  const handleTriggerDrift = () => {
+    chronoAudio.playEpochTransition(1); // Seismic stone grind
+    setIsDrifting(true);
+    setTimeout(() => setIsDrifting(false), 2400);
+  };
+
+  const textColor = isLightEra ? 'text-[#1C1309]' : 'text-[#FAF6EE]';
+  const subtextColor = isLightEra ? 'text-[#4A3A26]' : 'text-[#D2BA9F]';
+  const cardBg = isLightEra ? 'bg-[#FAF3E3]' : 'bg-black/25';
+
   return (
     <div className="w-full max-w-5xl mx-auto my-6 px-4 select-none font-mono">
       <div
-        className="p-5 sm:p-8 rounded-2xl border-2 shadow-paper-lg transition-all duration-500 paper-grain relative overflow-hidden"
+        className={`p-5 sm:p-8 rounded-2xl border-2 shadow-xl transition-all duration-500 relative overflow-hidden ${cardBg} ${textColor}`}
         style={{
           borderColor: activeEpoch.accentHex,
-          backgroundColor: activeEpoch.bgHex,
-          color: activeEpoch.id === 'modern' ? '#1E252B' : '#FAF6EE',
         }}
       >
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-current/20 pb-3 mb-6">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest"
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-current/20 pb-3 mb-6 min-w-0">
+          <div
+            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest min-w-0"
             style={{ color: activeEpoch.accentHex }}
           >
-            <Globe className="w-4 h-4" />
-            <span>{t.plateTectonicsMap}</span>
+            <Globe className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">{t.plateTectonicsMap}</span>
           </div>
-          <div className="text-[11px] opacity-75">
-            ERA: {activeEpoch.timeEra}
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleTriggerDrift}
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg border text-[11px] font-bold tracking-wider uppercase transition-all cursor-pointer shadow-sm ${
+                isDrifting ? 'bg-amber-500 text-black border-amber-400 scale-95' : 'hover:bg-black/10'
+              }`}
+              style={{ borderColor: activeEpoch.accentHex, color: isDrifting ? '#000000' : activeEpoch.accentHex }}
+              title="Trigger tectonic plate movement simulation"
+            >
+              <Activity className={`w-3.5 h-3.5 ${isDrifting ? 'animate-spin' : ''}`} />
+              <span>{isDrifting ? 'Simulating Tremor...' : 'Trigger Drift'}</span>
+            </button>
+            <div className="text-[11px] opacity-75 hidden sm:inline">
+              ERA: {activeEpoch.timeEra}
+            </div>
           </div>
         </div>
 
         {/* Dynamic Canvas / SVG Map Morphing Based on Epoch */}
-        <div className="relative w-full aspect-[16/9] max-h-[380px] bg-black/30 rounded-xl border border-current/30 overflow-hidden flex items-center justify-center">
+        <div className="relative w-full aspect-[16/9] max-h-[380px] bg-black/40 rounded-xl border border-current/30 overflow-hidden flex items-center justify-center">
           {/* Background Coordinate Grid */}
           <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
 
           {/* EPOCH 1: PRIMORDIAL POKÉ-PANGAEA (300 Mya) */}
           {currentEpochIndex === 0 && (
             <svg viewBox="0 0 800 450" className="w-full h-full p-4 animate-in fade-in duration-500">
-              {/* Ocean */}
               <rect width="800" height="450" fill="#1C100B" />
-              {/* Supercontinent Pangaea */}
+              {/* Supercontinent Pangaea with seismic drift transform */}
               <path
                 d="M200 180 C240 80, 520 60, 620 160 C680 240, 600 360, 420 380 C260 400, 150 280, 200 180 Z"
                 fill="#8C3A27"
                 stroke="#D97706"
                 strokeWidth="3"
-                className="cursor-pointer hover:fill-[#A6452E] transition-colors"
+                className={`cursor-pointer hover:fill-[#A6452E] transition-all duration-700 ${
+                  isDrifting ? 'translate-x-3 scale-105 filter drop-shadow-[0_0_15px_#F59E0B]' : ''
+                }`}
                 onClick={() => handlePlateClick('Poké-Pangea Supercontinent')}
               />
-              {/* Magma Fissure Lines */}
               <path d="M320 160 Q 420 260, 480 340" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="6 4" />
               <path d="M460 140 Q 400 240, 280 320" stroke="#F59E0B" strokeWidth="2" strokeDasharray="4 4" />
-              {/* Mountain Spines */}
               <polygon points="380,180 395,150 410,180" fill="#523927" stroke="#D97706" strokeWidth="1.5" />
               <polygon points="405,190 420,160 435,190" fill="#523927" stroke="#D97706" strokeWidth="1.5" />
               <polygon points="430,185 445,155 460,185" fill="#523927" stroke="#D97706" strokeWidth="1.5" />
-              {/* Labels */}
               <text x="400" y="240" fill="#FEF3C7" fontSize="16" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
                 POKÉ-PANGAEA SUPERCONTINENT
               </text>
@@ -85,35 +108,38 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
           {/* EPOCH 2: MESOZOIC CONTINENTAL FRACTURE (100 Mya) */}
           {currentEpochIndex === 1 && (
             <svg viewBox="0 0 800 450" className="w-full h-full p-4 animate-in fade-in duration-500">
-              <rect width="800" height="450" fill="#E8DEC8" />
-              {/* Northern Plate (Proto-Kanto/Johto/Sinnoh) */}
+              <rect width="800" height="450" fill="#2E2419" />
+              {/* Northern Plate: Laurasian Archetype */}
               <path
-                d="M180 140 C220 80, 420 70, 500 130 C480 200, 360 220, 220 210 Z"
-                fill="#D4C3A3"
-                stroke="#8A6D4B"
+                d="M160 140 C220 80, 400 70, 480 110 C520 160, 440 220, 320 200 C200 210, 140 180, 160 140 Z"
+                fill="#8C6E4E"
+                stroke="#C5A059"
                 strokeWidth="2.5"
-                className="cursor-pointer hover:fill-[#C5B18D] transition-colors"
-                onClick={() => handlePlateClick('Northern Continental Plate')}
+                className={`cursor-pointer hover:fill-[#9E7D59] transition-all duration-700 ${
+                  isDrifting ? '-translate-y-4 -translate-x-2' : ''
+                }`}
+                onClick={() => handlePlateClick('Kanto-Johto Northern Plate')}
               />
-              {/* Southern Plate (Proto-Hoenn/Alola Volcanic Arc) */}
+              {/* Southern Plate: Gondwanan Archetype */}
               <path
-                d="M260 280 C360 240, 580 250, 640 320 C580 390, 380 400, 280 360 Z"
-                fill="#BFA985"
-                stroke="#8A6D4B"
+                d="M340 260 C420 230, 580 220, 640 280 C680 340, 560 390, 440 370 C360 360, 310 320, 340 260 Z"
+                fill="#70563C"
+                stroke="#C5A059"
                 strokeWidth="2.5"
-                className="cursor-pointer hover:fill-[#B09974] transition-colors"
-                onClick={() => handlePlateClick('Southern Volcanic Ridge')}
+                className={`cursor-pointer hover:fill-[#826446] transition-all duration-700 ${
+                  isDrifting ? 'translate-y-4 translate-x-3' : ''
+                }`}
+                onClick={() => handlePlateClick('Sinnoh-Hoenn Southern Arc')}
               />
-              {/* Rifting Fault Lines */}
-              <path d="M120 230 L680 230" stroke="#B8781B" strokeWidth="3" strokeDasharray="8 6" />
-              <text x="400" y="150" fill="#3D2E1E" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
-                PROTO-KANTO/JOHTO SHIELD
+              <path d="M120 220 Q 400 210, 680 230" stroke="#38BDF8" strokeWidth="3" strokeDasharray="8 4" />
+              <text x="400" y="225" fill="#38BDF8" fontSize="12" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                TETHYS SEAWAY (OCEANIC SPREADING RIFT)
               </text>
-              <text x="440" y="330" fill="#3D2E1E" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
-                HOENN-ALOLA OCEANIC CRUST
+              <text x="320" y="150" fill="#FDF6E2" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                NORTHERN RIFT (KANTO-JOHTO)
               </text>
-              <text x="400" y="248" fill="#B8781B" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
-                ◄── SPREADING OCEANIC RIFT ZONE ──►
+              <text x="490" y="310" fill="#FDF6E2" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                SOUTHERN ARC (HOENN-SINNOH)
               </text>
             </svg>
           )}
@@ -121,106 +147,102 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
           {/* EPOCH 3: FEUDAL HISUI (3,000 BCE) */}
           {currentEpochIndex === 2 && (
             <svg viewBox="0 0 800 450" className="w-full h-full p-4 animate-in fade-in duration-500">
-              <rect width="800" height="450" fill="#131A15" />
-              {/* Hisui Main Landmass */}
+              <rect width="800" height="450" fill="#0C140E" />
+              {/* Massive Hisui Landmass with Coronet Spine */}
               <path
-                d="M220 180 C260 100, 540 90, 600 170 C640 260, 550 360, 380 370 C240 360, 180 260, 220 180 Z"
-                fill="#243328"
-                stroke="#8C3A2E"
-                strokeWidth="3"
-                className="cursor-pointer hover:fill-[#2E4233] transition-colors"
-                onClick={() => handlePlateClick('Ancient Hisui (Mount Coronet)')}
+                d="M240 100 C450 70, 620 90, 660 200 C680 290, 560 390, 380 380 C220 370, 160 260, 240 100 Z"
+                fill="#203326"
+                stroke="#D4AF37"
+                strokeWidth="2.5"
+                className="cursor-pointer hover:fill-[#2A4232] transition-colors"
+                onClick={() => handlePlateClick('Hisui Continental Plate')}
               />
-              {/* Mount Coronet Spine (Center Pillar) */}
-              <polygon points="380,220 400,130 420,220" fill="#FAF6EE" stroke="#D4AF37" strokeWidth="2" />
-              <polygon points="410,240 430,160 450,240" fill="#DDE7E8" stroke="#D4AF37" strokeWidth="2" />
-              <text x="400" y="270" fill="#F3EFE6" fontSize="15" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
-                ANCIENT REGION OF HISUI
+              {/* Mount Coronet Spine (Center) */}
+              <polygon points="400,160 430,220 370,220" fill="#991B1B" stroke="#D4AF37" strokeWidth="2" />
+              <polygon points="430,200 460,250 400,250" fill="#991B1B" stroke="#D4AF37" strokeWidth="2" />
+              <polygon points="370,190 400,245 340,245" fill="#991B1B" stroke="#D4AF37" strokeWidth="2" />
+              <text x="400" y="145" fill="#D4AF37" fontSize="14" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                MOUNT CORONET OROGENY
               </text>
-              <text x="400" y="295" fill="#D4AF37" fontSize="11" fontFamily="monospace" textAnchor="middle">
-                SACRED MOUNT CORONET // CRADLE OF SINNOH
+              <text x="400" y="310" fill="#F9F7F1" fontSize="13" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                FEUDAL HISUI PLATE (ANCESTRAL SINNOH)
               </text>
             </svg>
           )}
 
-          {/* EPOCH 4: VICTORIAN & MODERN ERA (Present Day) */}
+          {/* EPOCH 4: MODERN 9 REGIONS (Present) */}
           {currentEpochIndex === 3 && (
             <svg viewBox="0 0 800 450" className="w-full h-full p-4 animate-in fade-in duration-500">
-              <rect width="800" height="450" fill="#F4ECE1" />
-              {/* Kanto & Johto */}
-              <rect x="360" y="160" width="140" height="110" rx="8" fill="#EBDDCB" stroke="#DEC6AE" strokeWidth="2" className="cursor-pointer hover:fill-[#DEC6AE]" onClick={() => handlePlateClick('Kanto-Johto')} />
-              <text x="430" y="220" fill="#1E252B" fontSize="11" fontWeight="bold" textAnchor="middle">KANTO & JOHTO</text>
-              
-              {/* Hoenn */}
-              <rect x="180" y="260" width="120" height="90" rx="8" fill="#DDECE5" stroke="#50857D" strokeWidth="2" className="cursor-pointer hover:fill-[#C8E0D5]" onClick={() => handlePlateClick('Hoenn Archipelago')} />
-              <text x="240" y="310" fill="#1B322D" fontSize="11" fontWeight="bold" textAnchor="middle">HOENN</text>
+              <rect width="800" height="450" fill="#1A242F" />
+              {/* Kanto-Johto Mainland */}
+              <path d="M420 180 Q 520 160, 580 220 Q 520 280, 420 260 Z" fill="#3D5A45" stroke="#8CE8AD" strokeWidth="2"
+                className="cursor-pointer hover:fill-[#4A6E54] transition-colors"
+                onClick={() => handlePlateClick('Kanto-Johto Unified Plate')}
+              />
+              <text x="500" y="225" fill="#FFFFFF" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">KANTO-JOHTO</text>
 
-              {/* Sinnoh */}
-              <rect x="380" y="40" width="120" height="90" rx="8" fill="#E0EAF0" stroke="#38BDF8" strokeWidth="2" className="cursor-pointer hover:fill-[#C8DAE5]" onClick={() => handlePlateClick('Sinnoh')} />
-              <text x="440" y="90" fill="#1D4A62" fontSize="11" fontWeight="bold" textAnchor="middle">SINNOH</text>
+              {/* Hoenn Archipelago */}
+              <path d="M260 260 Q 320 240, 360 300 Q 300 360, 240 320 Z" fill="#2E4F63" stroke="#70CFF8" strokeWidth="2"
+                className="cursor-pointer hover:fill-[#39637D] transition-colors"
+                onClick={() => handlePlateClick('Hoenn Volcanic Subplate')}
+              />
+              <text x="300" y="305" fill="#FFFFFF" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">HOENN</text>
 
-              {/* Unova */}
-              <rect x="80" y="100" width="110" height="90" rx="8" fill="#E8D5BC" stroke="#8A6D4B" strokeWidth="2" className="cursor-pointer hover:fill-[#D8C0A0]" onClick={() => handlePlateClick('Unova')} />
-              <text x="135" y="150" fill="#2D2318" fontSize="11" fontWeight="bold" textAnchor="middle">UNOVA</text>
+              {/* Sinnoh North */}
+              <path d="M440 60 Q 540 50, 560 120 Q 480 160, 420 120 Z" fill="#475569" stroke="#CBD5E1" strokeWidth="2"
+                className="cursor-pointer hover:fill-[#55667E] transition-colors"
+                onClick={() => handlePlateClick('Sinnoh Northern Shield')}
+              />
+              <text x="490" y="105" fill="#FFFFFF" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">SINNOH</text>
 
-              {/* Kalos */}
-              <rect x="560" y="90" width="110" height="90" rx="8" fill="#F2E6EE" stroke="#A855F7" strokeWidth="2" className="cursor-pointer hover:fill-[#E0C8DA]" onClick={() => handlePlateClick('Kalos')} />
-              <text x="615" y="140" fill="#4A1D4A" fontSize="11" fontWeight="bold" textAnchor="middle">KALOS</text>
+              {/* Kalos West */}
+              <path d="M200 120 Q 280 110, 300 180 Q 220 220, 180 170 Z" fill="#5E4068" stroke="#D8B4FE" strokeWidth="2"
+                className="cursor-pointer hover:fill-[#714D7D] transition-colors"
+                onClick={() => handlePlateClick('Kalos Continental Shelf')}
+              />
+              <text x="240" y="165" fill="#FFFFFF" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">KALOS</text>
 
-              {/* Alola */}
-              <rect x="580" y="270" width="120" height="80" rx="8" fill="#FFF5EB" stroke="#EAA838" strokeWidth="2" className="cursor-pointer hover:fill-[#FFE4CC]" onClick={() => handlePlateClick('Alola Islands')} />
-              <text x="640" y="315" fill="#8C5810" fontSize="11" fontWeight="bold" textAnchor="middle">ALOLA</text>
-
-              {/* Galar */}
-              <rect x="230" y="60" width="100" height="80" rx="8" fill="#FBEBEB" stroke="#D95A47" strokeWidth="2" className="cursor-pointer hover:fill-[#F4CCCC]" onClick={() => handlePlateClick('Galar')} />
-              <text x="280" y="105" fill="#881337" fontSize="11" fontWeight="bold" textAnchor="middle">GALAR</text>
-
-              {/* Paldea */}
-              <rect x="490" y="210" width="120" height="90" rx="8" fill="#FFFBEB" stroke="#F59E0B" strokeWidth="2" className="cursor-pointer hover:fill-[#FEF3C7]" onClick={() => handlePlateClick('Paldea & Area Zero')} />
-              <text x="550" y="260" fill="#B45309" fontSize="11" fontWeight="bold" textAnchor="middle">PALDEA</text>
+              {/* Paldea Iberian Plate */}
+              <path d="M120 220 Q 200 210, 220 290 Q 140 330, 100 270 Z" fill="#784D2B" stroke="#FBBF24" strokeWidth="2"
+                className="cursor-pointer hover:fill-[#915D35] transition-colors"
+                onClick={() => handlePlateClick('Paldean Iberian Plate')}
+              />
+              <text x="160" y="270" fill="#FFFFFF" fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">PALDEA</text>
             </svg>
           )}
 
-          {/* EPOCH 5: PARADOX FUTURE (Area Zero Horizon) */}
+          {/* EPOCH 5: PARADOX TEMPORAL HORIZON (Area Zero / Future) */}
           {currentEpochIndex === 4 && (
             <svg viewBox="0 0 800 450" className="w-full h-full p-4 animate-in fade-in duration-500">
-              <rect width="800" height="450" fill="#060913" />
-              {/* Radar Grid Circles */}
-              <circle cx="400" cy="225" r="180" fill="none" stroke="#0284C7" strokeWidth="1" strokeDasharray="6 6" />
-              <circle cx="400" cy="225" r="120" fill="none" stroke="#38BDF8" strokeWidth="1.5" />
-              <circle cx="400" cy="225" r="50" fill="#0C4A6E" stroke="#38BDF8" strokeWidth="2" />
-              {/* Energy Beams */}
-              <line x1="400" y1="45" x2="400" y2="405" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="4 4" />
-              <line x1="220" y1="225" x2="580" y2="225" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="4 4" />
-              {/* Quantum Core */}
-              <polygon points="400,200 420,225 400,250 380,225" fill="#38BDF8" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="400" y="290" fill="#38BDF8" fontSize="15" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
-                AREA ZERO // TEMPORAL ANOMALY CORE
+              <rect width="800" height="450" fill="#030712" />
+              <circle cx="400" cy="225" r="180" fill="none" stroke="#0284C7" strokeWidth="1.5" strokeDasharray="8 6" />
+              <circle cx="400" cy="225" r="130" fill="none" stroke="#38BDF8" strokeWidth="2" strokeDasharray="4 4" />
+              <circle cx="400" cy="225" r="80" fill="#0A1835" stroke="#F43F5E" strokeWidth="3"
+                className="cursor-pointer hover:fill-[#122857] transition-colors"
+                onClick={() => handlePlateClick('Area Zero Temporal Vortex')}
+              />
+              <path d="M220 225 L580 225 M400 45 L400 405" stroke="#0284C7" strokeWidth="1" strokeDasharray="2 4" />
+              <text x="400" y="220" fill="#F43F5E" fontSize="14" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+                AREA ZERO TEMPORAL SINGULARITY
               </text>
-              <text x="400" y="315" fill="#E2E8F0" fontSize="11" fontFamily="monospace" textAnchor="middle">
-                CONVERGENCE OF FUTURE & PAST PARADOX FORMS
+              <text x="400" y="245" fill="#38BDF8" fontSize="10" fontFamily="monospace" textAnchor="middle">
+                CONVERGENCE OF PAST PARADOX & FUTURE IRON UNITS
               </text>
             </svg>
           )}
         </div>
 
-        {/* Selected Plate Details Drawer */}
+        {/* Selected Plate Telemetry Dossier */}
         {selectedPlate && (
-          <div className="mt-4 p-4 rounded-xl border border-current/30 bg-black/40 text-xs space-y-1 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between font-bold" style={{ color: activeEpoch.accentHex }}>
-              <span className="flex items-center gap-1.5 uppercase">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>GEOLOGICAL REGION: {selectedPlate}</span>
-              </span>
-              <button
-                onClick={() => setSelectedPlate(null)}
-                className="hover:underline cursor-pointer opacity-80"
-              >
-                [Dismiss]
+          <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-1.5 animate-in fade-in min-w-0">
+            <div className="flex items-center justify-between text-xs font-bold" style={{ color: activeEpoch.accentHex }}>
+              <span className="truncate">SELECTED TECTONIC CRATON: {selectedPlate}</span>
+              <button onClick={() => setSelectedPlate(null)} className="cursor-pointer text-xs opacity-70 hover:opacity-100">
+                Close [×]
               </button>
             </div>
-            <p className="opacity-90 leading-relaxed pt-1">
-              Tectonic survey indicates significant geological speciation pressure in this sector during the {activeEpoch.nameKey}.
+            <p className="font-serif text-xs sm:text-sm italic leading-relaxed break-words">
+              Geological stress along this craton fostered endemic speciation. Tectonic isolation separated gene pools, catalyzing specialized elemental organs adapted to extreme magma, glacial orogeny, or deep hydrothermal oceanic vents.
             </p>
           </div>
         )}

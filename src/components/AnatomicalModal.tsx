@@ -296,22 +296,22 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
           </div>
 
           {/* DEDICATED SEPARATE STATUS STRIP (NO OVERLAPPING!) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>VIEWING LAYER</span>
-              <strong className={`text-sm ${style.accentText}`}>LAYER {activeLayer} OF 4</strong>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs min-w-0">
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>VIEWING LAYER</span>
+              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>LAYER {activeLayer} OF 4</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>TIME EPOCH</span>
-              <strong className="text-sm truncate">{pokemon.epoch.time_label}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>TIME EPOCH</span>
+              <strong className="text-xs sm:text-sm truncate max-w-full">{pokemon.epoch.time_label}</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>TECTONIC REGION</span>
-              <strong className="text-sm truncate">{pokemon.epoch.epoch_name}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>TECTONIC REGION</span>
+              <strong className="text-xs sm:text-sm truncate max-w-full">{pokemon.epoch.epoch_name}</strong>
             </div>
-            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold ${style.subtext}`}>BONE DENSITY</span>
-              <strong className={`text-sm ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
+            <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 ${style.card}`}>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>BONE DENSITY</span>
+              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
             </div>
           </div>
 
