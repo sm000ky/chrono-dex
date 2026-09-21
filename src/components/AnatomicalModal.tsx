@@ -9,10 +9,8 @@ import {
   Shield,
   Activity,
   Globe,
-  Dna,
   Zap,
   Flame,
-  Award
 } from 'lucide-react';
 
 interface AnatomicalModalProps {
@@ -52,54 +50,64 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
     setActiveLayer(layerNum);
   };
 
-  // 5 Epoch Styling for Modal Chamber
+  // 5 Distinct High-Contrast Modal Themes per Era
   const getModalTheme = () => {
     switch (activeEpochId) {
       case 'primordial':
         return {
-          bg: 'bg-[#2A1A12]',
-          text: 'text-[#F5EBE1]',
-          border: 'border-[#9C4221]',
-          card: 'bg-[#3A2419]',
-          accent: 'text-[#D97706]',
-          badge: 'bg-[#523927] text-amber-200 border-amber-600',
+          bg: 'bg-[#1C100B] text-[#F7EFE8] border-4 border-[#8C3E1B] shadow-[0_0_50px_rgba(0,0,0,0.8)]',
+          card: 'bg-[#29170E] border border-[#8C3E1B]',
+          subtext: 'text-[#D2BA9F]',
+          accent: 'text-[#E07A28]',
+          headerBg: 'bg-[#120A06] border-b-2 border-[#8C3E1B]',
+          tabActive: 'bg-[#E07A28] text-black font-bold border-[#E07A28] shadow-paper-sm',
+          tabInactive: 'bg-[#1C100B] text-[#D2BA9F] border-[#8C3E1B]/60 hover:bg-[#29170E]',
+          innerMat: 'bg-[#2E1B11] border border-[#8C3E1B]/50',
         };
       case 'drift':
         return {
-          bg: 'bg-[#FAF6EE]',
-          text: 'text-[#2D2318]',
-          border: 'border-[#C5A059]',
-          card: 'bg-[#F4ECE1]',
-          accent: 'text-[#B8781B]',
-          badge: 'bg-[#F4ECE1] text-[#8A6D4B] border-[#C5A059]',
+          bg: 'bg-[#FAF3E3] text-[#1C1309] border-4 border-[#B38F56] shadow-paper-lg',
+          card: 'bg-[#F2E7D0] border-2 border-[#B38F56]/60',
+          subtext: 'text-[#4A3A26]',
+          accent: 'text-[#8A6225]',
+          headerBg: 'bg-[#EFE3C8] border-b-2 border-[#B38F56]',
+          tabActive: 'bg-[#8A6225] text-white font-bold border-[#8A6225] shadow-paper-sm',
+          tabInactive: 'bg-[#FAF3E3] text-[#1C1309] border-[#B38F56] hover:bg-[#EFE3C8]',
+          innerMat: 'bg-[#FFF9EE] border-2 border-[#B38F56]/50 shadow-inner',
         };
       case 'feudal':
         return {
-          bg: 'bg-[#1C241E]',
-          text: 'text-[#F3EFE6]',
-          border: 'border-[#8C3A2E]',
-          card: 'bg-[#253328]',
+          bg: 'bg-[#101712] text-[#F8F6EF] border-4 border-[#991B1B] shadow-[0_0_50px_rgba(0,0,0,0.9)]',
+          card: 'bg-[#19241D] border border-[#991B1B]/60',
+          subtext: 'text-[#C3D1C8]',
           accent: 'text-[#D4AF37]',
-          badge: 'bg-[#2E4032] text-[#D4AF37] border-[#8C3A2E]',
+          headerBg: 'bg-[#0A100C] border-b-2 border-[#991B1B]',
+          tabActive: 'bg-[#991B1B] text-white font-bold border-[#D4AF37] shadow-paper-sm',
+          tabInactive: 'bg-[#101712] text-[#C3D1C8] border-[#991B1B]/50 hover:bg-[#19241D]',
+          innerMat: 'bg-[#1D2B22] border border-[#D4AF37]/40',
         };
       case 'modern':
         return {
-          bg: 'bg-[#FAF6EE]',
-          text: 'text-[#1E252B]',
-          border: 'border-[#DEC6AE]',
-          card: 'bg-[#FDFBF7]',
-          accent: 'text-[#D95A47]',
-          badge: 'bg-[#F4ECE1] text-[#2F6D68] border-[#DEC6AE]',
+          bg: 'bg-[#FAF7F2] text-[#111827] border-4 border-[#1E252B] shadow-[8px_8px_0px_#1E252B]',
+          card: 'bg-white border-2 border-[#1E252B]',
+          subtext: 'text-[#374151]',
+          accent: 'text-[#C53030]',
+          headerBg: 'bg-[#EAE6DE] border-b-2 border-[#1E252B]',
+          tabActive: 'bg-[#1E252B] text-white font-bold border-[#1E252B]',
+          tabInactive: 'bg-white text-[#111827] border-[#1E252B] hover:bg-[#EAE6DE]',
+          innerMat: 'bg-[#F9F8F6] border-2 border-[#1E252B]/20 shadow-inner',
         };
       case 'future':
       default:
         return {
-          bg: 'bg-[#0B1120]',
-          text: 'text-[#E2E8F0]',
-          border: 'border-[#0284C7]',
-          card: 'bg-[#0F172A]',
+          bg: 'bg-[#040814] text-[#F0F9FF] border-4 border-[#0284C7] shadow-[0_0_50px_rgba(6,182,212,0.3)]',
+          card: 'bg-[#0C1322] border border-cyan-500/40',
+          subtext: 'text-[#94A3B8]',
           accent: 'text-[#38BDF8]',
-          badge: 'bg-[#1E293B] text-cyan-300 border-cyan-500',
+          headerBg: 'bg-[#02040A] border-b-2 border-cyan-500/50',
+          tabActive: 'bg-[#38BDF8] text-black font-bold border-cyan-300 shadow-[0_0_15px_rgba(56,189,248,0.5)]',
+          tabInactive: 'bg-[#040814] text-[#94A3B8] border-cyan-500/30 hover:bg-[#0C1322]',
+          innerMat: 'bg-[#02050E] border border-cyan-500/30',
         };
     }
   };
@@ -113,26 +121,26 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full max-w-4xl max-h-[92vh] flex flex-col ${theme.bg} ${theme.text} border-2 ${theme.border} rounded-2xl shadow-paper-lg overflow-hidden paper-grain animate-in zoom-in-95 duration-200`}
+        className={`relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden paper-grain animate-in zoom-in-95 duration-200 ${theme.bg}`}
       >
         {/* Top Header Rail */}
-        <div className={`p-4 sm:p-6 border-b-2 ${theme.border} flex items-center justify-between gap-3 bg-black/10`}>
+        <div className={`p-4 sm:p-6 flex items-center justify-between gap-3 ${theme.headerBg}`}>
           <div className="space-y-0.5">
             <div className={`text-[10px] uppercase font-bold tracking-widest ${theme.accent} flex items-center gap-1.5`}>
               <Sparkles className="w-3.5 h-3.5" />
               <span>NATURALIST DOSSIER // #{String(pokemon.national_id).padStart(4, '0')}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">
-              {pokemon.name} <span className="text-xs font-mono opacity-60">({pokemon.japanese_name})</span>
+              {pokemon.name} <span className="text-xs font-mono opacity-70">({pokemon.japanese_name})</span>
             </h2>
-            <div className="italic font-serif text-sm opacity-80">
-              {t.binomialTaxonomy}: <strong className={theme.accent}>{pokemon.binomial_name}</strong>
+            <div className="italic font-serif text-sm font-semibold">
+              {t.binomialTaxonomy}: <span className={theme.accent}>{pokemon.binomial_name}</span>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className={`p-2 rounded-xl border-2 ${theme.border} hover:bg-white/10 transition-colors cursor-pointer`}
+            className="p-2 rounded-xl border-2 border-current hover:bg-black/20 transition-colors cursor-pointer"
             title={t.close}
           >
             <X className="w-5 h-5" />
@@ -140,7 +148,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
         </div>
 
         {/* Tactile Layer Slicer Controller */}
-        <div className={`p-3 border-b ${theme.border} bg-black/20 flex items-center justify-between gap-2 overflow-x-auto`}>
+        <div className="p-3 border-b border-current/20 bg-black/10 flex items-center justify-between gap-2 overflow-x-auto">
           <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider flex-shrink-0">
             <Layers className="w-4 h-4" />
             <span className="hidden sm:inline">{t.layerSlicer}:</span>
@@ -156,10 +164,8 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <button
                 key={layer.num}
                 onClick={() => handleLayerChange(layer.num)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg border text-[10px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                  activeLayer === layer.num
-                    ? 'bg-[#D97706] text-black border-amber-400 shadow-paper-sm scale-105'
-                    : 'border-current/30 hover:bg-white/10 opacity-75'
+                className={`px-3 py-1.5 rounded-lg border text-[10px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  activeLayer === layer.num ? theme.tabActive : theme.tabInactive
                 }`}
               >
                 {layer.label}
@@ -170,8 +176,8 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
         {/* Scrollable Inspection Chamber Body */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6">
-          {/* Main Visual Chamber with Dynamic Layer Transformation Filter */}
-          <div className={`relative p-6 rounded-2xl border-2 ${theme.border} ${theme.card} flex flex-col items-center justify-center min-h-[260px] overflow-hidden shadow-inner`}>
+          {/* Main Visual Chamber with High-Contrast Inner Mat */}
+          <div className={`relative p-6 rounded-2xl flex flex-col items-center justify-center min-h-[280px] overflow-hidden ${theme.innerMat}`}>
             {/* Background grid */}
             <div className="absolute inset-0 bg-[radial-gradient(currentColor_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
 
@@ -183,8 +189,8 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                   : activeLayer === 3
                   ? 'filter drop-shadow-[0_0_25px_rgba(245,158,11,0.8)] contrast-125 saturate-150'
                   : activeLayer === 4
-                  ? 'filter sepia(80%) drop-shadow-[2px_4px_8px_rgba(0,0,0,0.4)]'
-                  : 'drop-shadow-[3px_5px_8px_rgba(0,0,0,0.3)]'
+                  ? 'filter sepia(70%) drop-shadow-[2px_4px_8px_rgba(0,0,0,0.4)]'
+                  : 'drop-shadow-[3px_5px_8px_rgba(0,0,0,0.25)]'
               }`}
             >
               <img
@@ -198,11 +204,11 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
             </div>
 
             {/* Active Layer Tag Badge */}
-            <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px]">
-              VIEWING: <span className="font-bold text-amber-400">LAYER {activeLayer}</span>
+            <div className="absolute bottom-3 left-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px] text-white">
+              VIEWING: <span className="font-bold text-[#F59E0B]">LAYER {activeLayer}</span>
             </div>
 
-            <div className="absolute bottom-3 right-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px]">
+            <div className="absolute bottom-3 right-3 px-3 py-1 rounded-md bg-black/40 border border-current/30 text-[10px] text-white">
               ERA: <span className="font-bold">{pokemon.epoch.time_label}</span>
             </div>
           </div>
@@ -212,18 +218,18 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
            * =============================================================== */}
           {activeLayer === 1 && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl border ${theme.border} ${theme.card} space-y-2`}>
+              <div className={`p-4 sm:p-5 rounded-xl space-y-2 ${theme.card}`}>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
                     <Shield className="w-4 h-4" />
                     <span>{pokemon.anatomy.layer_1_dermis.title}</span>
                   </span>
-                  <span className="text-[10px] opacity-75">{pokemon.anatomy.layer_1_dermis.integument_type}</span>
+                  <span className={`text-[10px] font-bold ${theme.subtext}`}>{pokemon.anatomy.layer_1_dermis.integument_type}</span>
                 </div>
-                <p className="font-serif text-sm sm:text-base leading-relaxed italic opacity-95">
+                <p className="font-serif text-sm sm:text-base leading-relaxed italic">
                   "{pokemon.anatomy.layer_1_dermis.description}"
                 </p>
-                <div className="pt-2 text-xs border-t border-current/15 flex flex-wrap gap-4 opacity-80">
+                <div className={`pt-2 text-xs border-t border-current/15 flex flex-wrap gap-4 font-semibold ${theme.subtext}`}>
                   <span>{t.height}: <strong>{pokemon.height_m} m</strong></span>
                   <span>{t.weight}: <strong>{pokemon.weight_kg} kg</strong></span>
                   <span>TYPES: <strong>{pokemon.types.join(' / ')}</strong></span>
@@ -237,29 +243,29 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
            * =============================================================== */}
           {activeLayer === 2 && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl border ${theme.border} ${theme.card} space-y-3`}>
+              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
                     <Activity className="w-4 h-4" />
                     <span>{pokemon.anatomy.layer_2_osteology.title}</span>
                   </span>
-                  <span className="text-[10px] font-bold text-cyan-300">
+                  <span className={`text-[10px] font-bold ${theme.accent}`}>
                     {t.boneDensity}: {pokemon.anatomy.layer_2_osteology.bone_density_index}
                   </span>
                 </div>
 
-                <div className="text-sm font-bold opacity-90">
-                  Skeletal Architecture: <span className="text-cyan-300">{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
+                <div className="text-sm font-bold">
+                  Skeletal Architecture: <span className={theme.accent}>{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
                 </div>
 
-                <p className="font-serif text-sm sm:text-base leading-relaxed italic opacity-95">
+                <p className="font-serif text-sm sm:text-base leading-relaxed italic">
                   "{pokemon.anatomy.layer_2_osteology.description}"
                 </p>
 
                 {/* Base Stat Metric Bars */}
                 <div className="pt-2 border-t border-current/15 space-y-1.5 text-[11px]">
-                  <div className="text-[10px] uppercase font-bold opacity-75">{t.baseStats} (BST: {pokemon.stats.bst})</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <div className={`text-[10px] uppercase font-bold ${theme.subtext}`}>{t.baseStats} (BST: {pokemon.stats.bst})</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-semibold">
                     <div>HP: <strong>{pokemon.stats.hp}</strong></div>
                     <div>ATK: <strong>{pokemon.stats.attack}</strong></div>
                     <div>DEF: <strong>{pokemon.stats.defense}</strong></div>
@@ -277,9 +283,9 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
            * =============================================================== */}
           {activeLayer === 3 && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl border ${theme.border} ${theme.card} space-y-3`}>
+              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
                     <Zap className="w-4 h-4" />
                     <span>{pokemon.anatomy.layer_3_elemental_core.title}</span>
                   </span>
@@ -287,24 +293,24 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                 </div>
 
                 {/* Primary Organ */}
-                <div className="p-3 rounded-lg bg-black/20 border border-current/20 space-y-1">
-                  <div className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
+                  <div className={`text-xs font-bold ${theme.accent} flex items-center gap-1.5`}>
                     <Flame className="w-3.5 h-3.5" />
                     <span>PRIMARY ORGAN: {pokemon.anatomy.layer_3_elemental_core.primary_organ}</span>
                   </div>
-                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic opacity-90">
+                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
                     {pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}
                   </p>
                 </div>
 
                 {/* Secondary Organ if dual type */}
                 {pokemon.anatomy.layer_3_elemental_core.secondary_organ && (
-                  <div className="p-3 rounded-lg bg-black/20 border border-current/20 space-y-1">
-                    <div className="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                  <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
+                    <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
                       <Zap className="w-3.5 h-3.5" />
                       <span>SECONDARY ORGAN: {pokemon.anatomy.layer_3_elemental_core.secondary_organ}</span>
                     </div>
-                    <p className="font-serif text-xs sm:text-sm leading-relaxed italic opacity-90">
+                    <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
                       {pokemon.anatomy.layer_3_elemental_core.secondary_organ_desc}
                     </p>
                   </div>
@@ -318,28 +324,28 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
            * =============================================================== */}
           {activeLayer === 4 && (
             <div className="space-y-4 animate-in fade-in duration-200">
-              <div className={`p-4 sm:p-5 rounded-xl border ${theme.border} ${theme.card} space-y-3`}>
+              <div className={`p-4 sm:p-5 rounded-xl space-y-3 ${theme.card}`}>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <span className={`font-bold uppercase tracking-wider ${theme.accent} flex items-center gap-1.5`}>
                     <Globe className="w-4 h-4" />
                     <span>{pokemon.anatomy.layer_4_geologic_speciation.title}</span>
                   </span>
                   <span className="text-[10px] font-bold">{pokemon.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
 
-                <div className="p-3 rounded-lg bg-black/20 border border-current/20 space-y-1">
-                  <div className="text-xs font-bold text-amber-300">
+                <div className="p-3 rounded-lg bg-black/15 border border-current/20 space-y-1">
+                  <div className={`text-xs font-bold ${theme.accent}`}>
                     TECTONIC PHENOMENON: {pokemon.anatomy.layer_4_geologic_speciation.tectonic_event}
                   </div>
-                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic opacity-90">
+                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic">
                     "{pokemon.anatomy.layer_4_geologic_speciation.speciation_notes}"
                   </p>
                 </div>
 
                 {/* Pokedex Archival Note */}
                 <div className="space-y-1 pt-1">
-                  <div className="text-[10px] uppercase font-bold opacity-75">CANONICAL FIELD OBSERVATION:</div>
-                  <p className="font-serif text-xs sm:text-sm leading-relaxed italic border-l-2 border-amber-500 pl-3 opacity-90">
+                  <div className={`text-[10px] uppercase font-bold ${theme.subtext}`}>CANONICAL FIELD OBSERVATION:</div>
+                  <p className={`font-serif text-xs sm:text-sm leading-relaxed italic border-l-2 pl-3`} style={{ borderColor: 'currentColor' }}>
                     "{pokemon.description}"
                   </p>
                 </div>

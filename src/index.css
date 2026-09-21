@@ -1,81 +1,91 @@
 @import "tailwindcss";
 
 body {
-  background-color: #FAF6EE;
-  color: #1E252B;
+  margin: 0;
+  padding: 0;
   font-family: 'Newsreader', Georgia, serif;
   overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* =========================================================================
- * 5 GEOLOGICAL EPOCH THEMES & ARCHIVAL STYLES
+ * 5 RADICAL GEOLOGICAL EPOCH THEMES (HIGH-CONTRAST & HIGH-SIGNAL)
  * ========================================================================= */
 
-/* Epoch 1: Primordial Pangea (Cave Painting & Stone Petroglyph) */
+/* 1. EPOCH 1: PRIMORDIAL POKÉ-PANGAEA (300 Mya) */
+/* Archaic Cave Painting & Ocher Petroglyph on Volcanic Stone */
 .epoch-primordial {
-  background-color: #261811;
-  color: #F5EBE1;
-  --theme-accent: #D97706;
-  --theme-border: #78350F;
-  --theme-card: #382419;
+  background-color: #1A100A !important;
+  color: #F7EFE8 !important;
+  --theme-accent: #E07A28;
+  --theme-card-bg: #27170E;
+  --theme-border: #8C3E1B;
+  --theme-header-bg: #140C07;
+  --theme-subtext: #D2BA9F;
+  --theme-tag-bg: #3E2416;
+  background-image: radial-gradient(rgba(224, 122, 40, 0.12) 1px, transparent 0);
+  background-size: 14px 14px;
 }
 
-/* Epoch 2: Mesozoic Drift (Ernst Haeckel & Da Vinci Sepia Codex) */
+/* 2. EPOCH 2: MESOZOIC CONTINENTAL FRACTURE (100 Mya) */
+/* Antique Ernst Haeckel Sepia Codex & Aged Herbarium Parchment */
 .epoch-drift {
-  background-color: #F4ECE1;
-  color: #2D2318;
-  --theme-accent: #B8781B;
-  --theme-border: #C5A059;
-  --theme-card: #FAF6EE;
-}
-
-/* Epoch 3: Feudal Hisui (Ukiyo-e Woodblock & Sumi-e Washi) */
-.epoch-feudal {
-  background-color: #1C241E;
-  color: #F3EFE6;
-  --theme-accent: #D4AF37;
-  --theme-border: #8C3A2E;
-  --theme-card: #27332A;
-}
-
-/* Epoch 4: Victorian & Modern (Copperplate Etching & Naturalist Guide) */
-.epoch-modern {
-  background-color: #FAF6EE;
-  color: #1E252B;
-  --theme-accent: #D95A47;
-  --theme-border: #DEC6AE;
-  --theme-card: #FDFBF7;
-}
-
-/* Epoch 5: Paradox Horizon (Holographic Cyber Blueprint) */
-.epoch-future {
-  background-color: #0B1120;
-  color: #E2E8F0;
-  --theme-accent: #38BDF8;
-  --theme-border: #0284C7;
-  --theme-card: #0F172A;
-}
-
-/* Archival Paper Grains */
-.paper-grain {
-  background-image: radial-gradient(rgba(30, 37, 43, 0.08) 1px, transparent 0);
+  background-color: #ECE1CC !important;
+  color: #1C1309 !important; /* ULTRA DARK WALNUT INK: 100% READABLE! */
+  --theme-accent: #9A6218;
+  --theme-card-bg: #FAF3E3;
+  --theme-border: #B38F56;
+  --theme-header-bg: #E4D5BC;
+  --theme-subtext: #4A3A26;
+  --theme-tag-bg: #EAE0CB;
+  background-image: radial-gradient(rgba(45, 30, 15, 0.09) 1px, transparent 0);
   background-size: 8px 8px;
 }
 
-.blueprint-grid {
+/* 3. EPOCH 3: FEUDAL ANTIQUITY / HISUI ERA (3,000 BCE) */
+/* Ukiyo-e Woodblock & Sumi-e Pine Lacquer on Gold-flecked Washi */
+.epoch-feudal {
+  background-color: #0E1612 !important;
+  color: #F8F6EF !important;
+  --theme-accent: #D4AF37;
+  --theme-card-bg: #18231C;
+  --theme-border: #991B1B; /* Vermilion Lacquer */
+  --theme-header-bg: #090F0C;
+  --theme-subtext: #C3D1C8;
+  --theme-tag-bg: #223328;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.12) 1.5px, transparent 0);
+  background-size: 16px 16px;
+}
+
+/* 4. EPOCH 4: VICTORIAN & MODERN OCEANIC ERA (Present Day) */
+/* Crisp Naturalist Plate & Ken Sugimori Archival Botanical Paper */
+.epoch-modern {
+  background-color: #FAF7F2 !important;
+  color: #111827 !important; /* CRISP JET BLACK TEXT: 100% CONTRAST! */
+  --theme-accent: #C53030;
+  --theme-card-bg: #FFFFFF;
+  --theme-border: #1E252B;
+  --theme-header-bg: #F0ECE4;
+  --theme-subtext: #374151;
+  --theme-tag-bg: #EAE6DE;
+  background-image: radial-gradient(rgba(17, 24, 39, 0.08) 1px, transparent 0);
+  background-size: 10px 10px;
+}
+
+/* 5. EPOCH 5: PARADOX TEMPORAL HORIZON (Area Zero / Future) */
+/* Cybernetic Holographic Blueprint & Quantum Spectral Wireframe */
+.epoch-future {
+  background-color: #040814 !important;
+  color: #F0F9FF !important;
+  --theme-accent: #38BDF8;
+  --theme-card-bg: #0B1224;
+  --theme-border: #0284C7;
+  --theme-header-bg: #02040A;
+  --theme-subtext: #94A3B8;
+  --theme-tag-bg: #15223E;
   background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px),
                     linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.petroglyph-stone {
-  background-image: radial-gradient(rgba(217, 119, 6, 0.12) 1px, transparent 0);
-  background-size: 12px 12px;
-}
-
-.washi-grain {
-  background-image: radial-gradient(rgba(212, 175, 55, 0.08) 1px, transparent 0);
-  background-size: 10px 10px;
+  background-size: 24px 24px;
 }
 
 /* Custom minimal scrollbar */
@@ -84,14 +94,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(30, 37, 43, 0.05);
+  background: rgba(30, 37, 43, 0.08);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(30, 37, 43, 0.3);
-  border-radius: 2px;
+  background: rgba(30, 37, 43, 0.35);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(30, 37, 43, 0.5);
+  background: rgba(30, 37, 43, 0.55);
 }

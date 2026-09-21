@@ -8,16 +8,13 @@ import { TectonicMap } from './components/TectonicMap';
 import { PokemonCard } from './components/PokemonCard';
 import { AnatomicalModal } from './components/AnatomicalModal';
 import {
-  Compass,
   Search,
   Volume2,
   VolumeX,
   Globe,
   Filter,
   Sparkles,
-  BookOpen,
   ArrowUp,
-  Layers,
   X
 } from 'lucide-react';
 
@@ -42,6 +39,12 @@ export function App() {
   const [isMuted, setIsMuted] = useState<boolean>(true);
 
   const pokemonList = pokemonData as unknown as PokemonChronoEntry[];
+
+  // Change active epoch and switch ambient soundscape simultaneously!
+  const handleSelectEpoch = (newIdx: number) => {
+    setCurrentEpochIndex(newIdx);
+    chronoAudio.switchEpochAmbient(EPOCHS[newIdx].number);
+  };
 
   // Filter Pokemon based on Search, Type, and optional Epoch locking
   const filteredPokemon = useMemo(() => {
@@ -74,46 +77,46 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Get active class name for the whole page theme
   const getEpochClass = () => {
     switch (activeEpoch.id) {
-      case 'primordial': return 'epoch-primordial petroglyph-stone';
-      case 'drift': return 'epoch-drift paper-grain';
-      case 'feudal': return 'epoch-feudal washi-grain';
-      case 'modern': return 'epoch-modern paper-grain';
-      case 'future': default: return 'epoch-future blueprint-grid';
+      case 'primordial': return 'epoch-primordial';
+      case 'drift': return 'epoch-drift';
+      case 'feudal': return 'epoch-feudal';
+      case 'modern': return 'epoch-modern';
+      case 'future': default: return 'epoch-future';
     }
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-700 select-none font-mono ${getEpochClass()}`}>
+    <div className={`min-h-screen transition-colors duration-500 select-none font-mono ${getEpochClass()}`}>
       {/* ===================================================================
        * TOP STICKY HEADER
        * =================================================================== */}
-      <header className="sticky top-0 z-40 px-4 sm:px-8 py-3 border-b border-current/20 backdrop-blur-md bg-black/10 flex items-center justify-between gap-3 text-xs">
+      <header className="sticky top-0 z-40 px-3 sm:px-8 py-2.5 sm:py-3 border-b border-current/25 backdrop-blur-md bg-black/10 flex items-center justify-between gap-2 text-xs">
         {/* Brand */}
         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          <span className="w-2.5 h-2.5 rounded-full inline-block shadow-[0_0_8px_currentColor]"
+          <span
+            className="w-3 h-3 rounded-full inline-block shadow-[0_0_10px_currentColor]"
             style={{ backgroundColor: activeEpoch.accentHex }}
           />
           <span className="font-bold tracking-widest uppercase text-sm sm:text-base">
             {t.appTitle}
           </span>
-          <span className="hidden lg:inline opacity-30">·</span>
-          <span className="hidden lg:inline opacity-75 text-[11px]">
+          <span className="hidden lg:inline opacity-40">·</span>
+          <span className="hidden lg:inline font-serif italic text-xs font-semibold">
             {t.appSubtitle}
           </span>
         </div>
 
-        {/* Right Tools: Language, Sound, Tectonic Map Toggle */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Tools: Tectonic Map, Language, Sound */}
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* Tectonic Map Toggle Button */}
           <button
             onClick={() => {
               chronoAudio.playLayerPeel(1);
               setShowTectonicMap(!showTectonicMap);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[11px] font-bold tracking-wider uppercase transition-all shadow-paper-sm cursor-pointer hover:bg-white/10"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border text-[10px] sm:text-[11px] font-bold tracking-wider uppercase transition-all shadow-paper-sm cursor-pointer hover:bg-black/15"
             style={{ borderColor: activeEpoch.accentHex, color: activeEpoch.accentHex }}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -123,7 +126,7 @@ export function App() {
           </button>
 
           {/* Language Selector Pill */}
-          <div className="inline-flex rounded border border-current/30 overflow-hidden text-[10px]">
+          <div className="inline-flex rounded border border-current/30 overflow-hidden text-[10px] shadow-paper-sm">
             {(['en', 'id', 'ja'] as Language[]).map((l) => (
               <button
                 key={l}
@@ -131,10 +134,10 @@ export function App() {
                   chronoAudio.playLayerPeel(0);
                   setCurrentLang(l);
                 }}
-                className={`px-2.5 py-1 font-bold transition-colors cursor-pointer uppercase ${
+                className={`px-2 sm:px-2.5 py-1 font-bold transition-colors cursor-pointer uppercase ${
                   currentLang === l
                     ? 'text-black font-bold'
-                    : 'opacity-70 hover:opacity-100 hover:bg-white/10'
+                    : 'hover:bg-white/10 opacity-75'
                 }`}
                 style={{
                   backgroundColor: currentLang === l ? activeEpoch.accentHex : 'transparent',
@@ -148,9 +151,9 @@ export function App() {
           {/* Sound Toggle */}
           <button
             onClick={handleToggleMute}
-            className="flex items-center gap-1 px-2.5 py-1 rounded border text-[10px] font-bold tracking-wider transition-all shadow-paper-sm cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded border text-[10px] font-bold tracking-wider transition-all shadow-paper-sm cursor-pointer"
             style={{ borderColor: activeEpoch.accentHex }}
-            title="Toggle Epoch Acoustic Synthesizer"
+            title="Toggle Continuous Era Soundscape"
           >
             {isMuted ? (
               <>
@@ -170,19 +173,20 @@ export function App() {
       {/* ===================================================================
        * HERO SECTION
        * =================================================================== */}
-      <section className="pt-10 pb-6 px-4 text-center max-w-4xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] tracking-widest uppercase font-bold bg-black/20"
+      <section className="pt-8 sm:pt-12 pb-4 px-4 text-center max-w-4xl mx-auto space-y-2">
+        <div
+          className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border text-[10px] sm:text-xs tracking-widest uppercase font-bold bg-black/10"
           style={{ borderColor: activeEpoch.accentHex, color: activeEpoch.accentHex }}
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>NATURALIST SPECIMEN ATLAS // 1,025 TAXA</span>
+          <span>NATURALIST SPECIMEN ATLAS // 1,025 SPECIES</span>
         </div>
 
         <h1 className="text-4xl sm:text-6xl font-serif font-bold tracking-tight">
           {t.appTitle}
         </h1>
 
-        <p className="font-serif text-base sm:text-lg opacity-80 max-w-2xl mx-auto italic leading-relaxed">
+        <p className="font-serif text-base sm:text-lg opacity-90 max-w-2xl mx-auto italic leading-relaxed">
           "{t.tagline}"
         </p>
       </section>
@@ -192,12 +196,12 @@ export function App() {
        * =================================================================== */}
       <TectonicSlider
         currentEpochIndex={currentEpochIndex}
-        onSelectEpochIndex={setCurrentEpochIndex}
+        onSelectEpochIndex={handleSelectEpoch}
         t={t}
       />
 
       {/* ===================================================================
-       * OPTIONAL TECTONIC MAP VIEW (Continental Drift)
+       * CONTINENTAL DRIFT TECTONIC MAP VIEW
        * =================================================================== */}
       {showTectonicMap && (
         <TectonicMap
@@ -208,24 +212,25 @@ export function App() {
       )}
 
       {/* ===================================================================
-       * SEARCH & TYPE FILTER BAR
+       * SEARCH & TYPE FILTER BAR (HIGH CONTRAST & CLEAR READABILITY)
        * =================================================================== */}
       <section className="max-w-5xl mx-auto px-4 my-6 space-y-3">
         <div className="flex flex-col sm:flex-row items-center gap-3">
           {/* Live Search Input */}
-          <div className="relative w-full flex-1 flex items-center p-3 rounded-xl border-2 bg-black/20 text-xs shadow-paper-sm"
+          <div
+            className="relative w-full flex-1 flex items-center p-3 rounded-xl border-2 bg-black/10 text-xs shadow-paper-sm"
             style={{ borderColor: activeEpoch.accentHex }}
           >
-            <Search className="w-4 h-4 opacity-60 mr-2 flex-shrink-0" />
+            <Search className="w-4 h-4 opacity-70 mr-2 flex-shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t.searchPlaceholder}
-              className="w-full bg-transparent border-none outline-none font-mono text-xs placeholder:opacity-50"
+              className="w-full bg-transparent border-none outline-none font-mono text-xs placeholder:opacity-60"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="p-1 opacity-60 hover:opacity-100 cursor-pointer">
+              <button onClick={() => setSearchQuery('')} className="p-1 opacity-70 hover:opacity-100 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             )}
@@ -240,11 +245,12 @@ export function App() {
             className={`px-4 py-3 rounded-xl border-2 text-xs font-bold uppercase transition-all shadow-paper-sm cursor-pointer whitespace-nowrap ${
               filterByEpochOnly
                 ? 'text-black shadow-[0_0_12px_currentColor]'
-                : 'opacity-70 hover:opacity-100'
+                : 'hover:bg-black/10'
             }`}
             style={{
               backgroundColor: filterByEpochOnly ? activeEpoch.accentHex : 'transparent',
               borderColor: activeEpoch.accentHex,
+              color: filterByEpochOnly ? '#000000' : 'inherit',
             }}
           >
             {filterByEpochOnly ? `✓ LOCKED: ${activeEpoch.timeEra}` : `FILTER: ${activeEpoch.timeEra}`}
@@ -253,7 +259,7 @@ export function App() {
 
         {/* Horizontal Type Scrollbar */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-2 text-[10px]">
-          <Filter className="w-3.5 h-3.5 opacity-60 mr-1 flex-shrink-0" />
+          <Filter className="w-3.5 h-3.5 opacity-70 mr-1 flex-shrink-0" />
           {ALL_TYPES.map((type) => (
             <button
               key={type}
@@ -264,11 +270,12 @@ export function App() {
               className={`px-2.5 py-1 rounded-full border transition-all cursor-pointer uppercase font-bold whitespace-nowrap ${
                 selectedType === type
                   ? 'text-black shadow-paper-sm scale-105'
-                  : 'opacity-60 hover:opacity-100 hover:bg-white/10'
+                  : 'hover:bg-black/10'
               }`}
               style={{
                 backgroundColor: selectedType === type ? activeEpoch.accentHex : 'transparent',
                 borderColor: selectedType === type ? activeEpoch.accentHex : 'currentColor',
+                color: selectedType === type ? '#000000' : 'inherit',
               }}
             >
               {type}
@@ -277,7 +284,7 @@ export function App() {
         </div>
 
         {/* Results Counter */}
-        <div className="flex items-center justify-between text-[11px] opacity-70 pt-1">
+        <div className="flex items-center justify-between text-[11px] opacity-80 pt-1 font-semibold">
           <span>Showing <strong>{filteredPokemon.length}</strong> of 1,025 registered species</span>
           <span>Active Era: <strong>{activeEpoch.nameKey}</strong></span>
         </div>
@@ -287,7 +294,7 @@ export function App() {
        * GALLERY OF SPECIMENS (1,025 POKÉMON STYLED BY EPOCH)
        * =================================================================== */}
       <main className="max-w-6xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
           {filteredPokemon.slice(0, 100).map((pokemon) => (
             <PokemonCard
               key={pokemon.id}
@@ -298,10 +305,9 @@ export function App() {
           ))}
         </div>
 
-        {/* Load More indicator if over 100 */}
         {filteredPokemon.length > 100 && (
-          <div className="text-center py-10 opacity-70 text-xs">
-            Showing first 100 matches. Use search or type filters to pinpoint specific specimens.
+          <div className="text-center py-10 opacity-80 text-xs font-semibold">
+            Showing first 100 matches of {filteredPokemon.length}. Use the search bar or type filters to pinpoint any of the 1,025 Pokémon.
           </div>
         )}
       </main>
@@ -319,8 +325,8 @@ export function App() {
       {/* ===================================================================
        * FOOTER
        * =================================================================== */}
-      <footer className="mt-20 py-10 border-t border-current/20 text-center text-xs opacity-70 space-y-2">
-        <div>
+      <footer className="mt-20 py-10 border-t border-current/20 text-center text-xs opacity-80 space-y-2">
+        <div className="font-bold">
           CHRONO-DEX // THE 300-MILLION-YEAR CONTINENTAL & ANATOMICAL ATLAS
         </div>
         <div>
@@ -329,7 +335,7 @@ export function App() {
         <div className="pt-2">
           <button
             onClick={handleScrollToTop}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-current/30 hover:bg-white/10 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-current hover:bg-black/10 transition-colors cursor-pointer"
           >
             <ArrowUp className="w-3.5 h-3.5" />
             <span>Back to Top</span>
