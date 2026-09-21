@@ -8,6 +8,14 @@ interface PokemonCardProps {
   onSelect: (pokemon: PokemonChronoEntry) => void;
 }
 
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, iconSrc: string) => {
+  const target = e.currentTarget;
+  if (!target.dataset.fallback) {
+    target.dataset.fallback = 'true';
+    target.src = iconSrc;
+  }
+};
+
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   epochId,
@@ -37,7 +45,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             alt={pokemon.name}
             loading="lazy"
             className="w-full h-full object-contain filter sepia-[0.4] contrast-125 group-hover:scale-110 transition-transform duration-300"
-            onError={(e) => { (e.target as HTMLImageElement).src = pokemon.sprites.icon; }}
+            onError={(e) => handleImageError(e, pokemon.sprites.icon)}
           />
         </div>
 
@@ -77,7 +85,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             alt={pokemon.name}
             loading="lazy"
             className="w-full h-full object-contain filter sepia-[0.35] contrast-115 group-hover:scale-110 transition-transform duration-300"
-            onError={(e) => { (e.target as HTMLImageElement).src = pokemon.sprites.icon; }}
+            onError={(e) => handleImageError(e, pokemon.sprites.icon)}
           />
         </div>
 
@@ -116,7 +124,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             alt={pokemon.name}
             loading="lazy"
             className="w-full h-full object-contain filter contrast-125 saturate-90 group-hover:scale-110 transition-transform duration-300"
-            onError={(e) => { (e.target as HTMLImageElement).src = pokemon.sprites.icon; }}
+            onError={(e) => handleImageError(e, pokemon.sprites.icon)}
           />
         </div>
 
@@ -151,7 +159,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             alt={pokemon.name}
             loading="lazy"
             className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-            onError={(e) => { (e.target as HTMLImageElement).src = pokemon.sprites.icon; }}
+            onError={(e) => handleImageError(e, pokemon.sprites.icon)}
           />
         </div>
 
@@ -185,7 +193,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           alt={pokemon.name}
           loading="lazy"
           className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(56,189,248,0.7)] group-hover:scale-110 transition-transform duration-300"
-          onError={(e) => { (e.target as HTMLImageElement).src = pokemon.sprites.icon; }}
+          onError={(e) => handleImageError(e, pokemon.sprites.icon)}
         />
       </div>
 

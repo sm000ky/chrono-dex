@@ -1,5 +1,6 @@
-import React from 'react';
-import { EPOCHS, Translations } from '../lib/i18n';
+import React, { useMemo } from 'react';
+import { getLocalizedEpochs, Translations } from '../lib/i18n';
+import { Language } from '../types';
 import { chronoAudio } from '../lib/audioEngine';
 import { Clock, Mountain, Palette } from 'lucide-react';
 
@@ -7,27 +8,30 @@ interface TectonicSliderProps {
   currentEpochIndex: number; // 0 to 4
   onSelectEpochIndex: (index: number) => void;
   t: Translations;
+  currentLang?: Language;
 }
 
 export const TectonicSlider: React.FC<TectonicSliderProps> = ({
   currentEpochIndex,
   onSelectEpochIndex,
   t,
+  currentLang = 'id',
 }) => {
-  const activeEpoch = EPOCHS[currentEpochIndex];
+  const epochs = useMemo(() => getLocalizedEpochs(currentLang), [currentLang]);
+  const activeEpoch = epochs[currentEpochIndex];
   const isLightEra = activeEpoch.id === 'drift' || activeEpoch.id === 'modern';
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIdx = parseInt(e.target.value, 10);
     if (newIdx !== currentEpochIndex) {
-      chronoAudio.playEpochTransition(EPOCHS[newIdx].number);
+      chronoAudio.playEpochTransition(epochs[newIdx].number);
       onSelectEpochIndex(newIdx);
     }
   };
 
   const handleStepClick = (idx: number) => {
     if (idx !== currentEpochIndex) {
-      chronoAudio.playEpochTransition(EPOCHS[idx].number);
+      chronoAudio.playEpochTransition(epochs[idx].number);
       onSelectEpochIndex(idx);
     }
   };
@@ -57,7 +61,7 @@ export const TectonicSlider: React.FC<TectonicSliderProps> = ({
 
           {/* Mechanical Needle Sway Epoch Meter */}
           <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full border border-current/30 bg-black/15">
-            <span className="text-[9px] uppercase tracking-wider opacity-70">GEOLOGICAL DIAL</span>
+            <span className="text-[9px] uppercase tracking-wider opacity-70">{t.geologicalDial}</span>
             <div className="relative w-8 h-4 overflow-hidden flex items-end justify-center">
               <div
                 className="w-0.5 h-3.5 bg-current rounded-full origin-bottom transition-transform duration-500 ease-out"
@@ -84,17 +88,7 @@ export const TectonicSlider: React.FC<TectonicSliderProps> = ({
           <div className={`flex items-center gap-2 text-xs pt-1 min-w-0 ${subtextColor}`}>
             <Mountain className="w-3.5 h-3.5 flex-shrink-0" style={{ color: activeEpoch.accentHex }} />
             <span className="break-words">
-              {t.tectonicEvent}: <strong className={textColor}>
-                {activeEpoch.id === 'primordial'
-                  ? 'Supercontinent Poké-Pangea Rifting'
-                  : activeEpoch.id === 'drift'
-                  ? 'Continental Fracture & Tethys Sea Opening'
-                  : activeEpoch.id === 'feudal'
-                  ? 'Hisui Landbridge & Mount Coronet Orogeny'
-                  : activeEpoch.id === 'modern'
-                  ? '9 Global Archipelago Plates Established'
-                  : 'Area Zero Temporal Rift Expansion'}
-              </strong>
+              {t.tectonicEvent}: <strong className={textColor}>{activeEpoch.tectonicEvent}</strong>
             </span>
           </div>
         </div>
@@ -118,7 +112,7 @@ export const TectonicSlider: React.FC<TectonicSliderProps> = ({
 
           {/* Stepped Marker Buttons */}
           <div className="grid grid-cols-5 gap-1.5 pt-1 text-[10px] text-center">
-            {EPOCHS.map((ep, idx) => {
+            {epochs.map((ep, idx) => {
               const isSelected = currentEpochIndex === idx;
               return (
                 <button
@@ -137,7 +131,7 @@ export const TectonicSlider: React.FC<TectonicSliderProps> = ({
                 >
                   <div className="truncate font-bold text-xs">0{ep.number}</div>
                   <div className="text-[9px] truncate max-w-full font-serif hidden sm:block">
-                    {ep.id === 'primordial' ? 'Pangaea' : ep.id === 'drift' ? 'Fracture' : ep.id === 'feudal' ? 'Hisui' : ep.id === 'modern' ? 'Modern' : 'Paradox'}
+                    {ep.shortName}
                   </div>
                 </button>
               );

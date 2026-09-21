@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import pokemonData from './data/chrono_pokemon.json';
 import { PokemonChronoEntry, Language } from './types';
-import { DICTIONARY, EPOCHS } from './lib/i18n';
+import { DICTIONARY, getLocalizedEpochs } from './lib/i18n';
 import { chronoAudio } from './lib/audioEngine';
 import { TectonicSlider } from './components/TectonicSlider';
 import { TectonicMap } from './components/TectonicMap';
@@ -58,11 +58,12 @@ const TITAN_IDS = new Set([
 const PAGE_SIZE = 24;
 
 export function App() {
-  const [currentLang, setCurrentLang] = useState<Language>('en');
+  const [currentLang, setCurrentLang] = useState<Language>('id'); // Default to ID as requested by user
   const t = DICTIONARY[currentLang];
 
+  const localizedEpochs = useMemo(() => getLocalizedEpochs(currentLang), [currentLang]);
   const [currentEpochIndex, setCurrentEpochIndex] = useState<number>(1); // Default to Mesozoic Drift
-  const activeEpoch = EPOCHS[currentEpochIndex];
+  const activeEpoch = localizedEpochs[currentEpochIndex];
 
   // Museum Navigation Tabs (Default to Dissection Bench)
   const [viewMode, setViewMode] = useState<MuseumViewMode>('dissection');
@@ -80,7 +81,7 @@ export function App() {
   // Change active epoch and switch ambient soundscape simultaneously
   const handleSelectEpoch = (newIdx: number) => {
     setCurrentEpochIndex(newIdx);
-    chronoAudio.switchEpochAmbient(EPOCHS[newIdx].number);
+    chronoAudio.switchEpochAmbient(localizedEpochs[newIdx].number);
   };
 
   const handleSelectTab = (mode: MuseumViewMode) => {
@@ -236,6 +237,7 @@ export function App() {
         currentEpochIndex={currentEpochIndex}
         onSelectEpochIndex={handleSelectEpoch}
         t={t}
+        currentLang={currentLang}
       />
 
       {/* ===================================================================
@@ -252,7 +254,7 @@ export function App() {
             }`}
           >
             <Layers className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">Dissection Lab</span>
+            <span className="whitespace-nowrap">{t.tabDissection}</span>
           </button>
 
           <button
@@ -264,7 +266,7 @@ export function App() {
             }`}
           >
             <Scale className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">Comparative Bench</span>
+            <span className="whitespace-nowrap">{t.tabComparative}</span>
           </button>
 
           <button
@@ -276,7 +278,7 @@ export function App() {
             }`}
           >
             <Compass className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">Continental Drift</span>
+            <span className="whitespace-nowrap">{t.tabAtlas}</span>
           </button>
 
           <button
@@ -288,7 +290,7 @@ export function App() {
             }`}
           >
             <Dna className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">Tree of Life</span>
+            <span className="whitespace-nowrap">{t.tabPhylogeny}</span>
           </button>
 
           <button
@@ -300,7 +302,7 @@ export function App() {
             }`}
           >
             <Archive className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">1,025 Archives</span>
+            <span className="whitespace-nowrap">{t.tabArchives}</span>
           </button>
         </div>
       </nav>
@@ -313,17 +315,21 @@ export function App() {
           pokemonList={pokemonList}
           epochId={activeEpoch.id}
           onOpenFullModal={setSelectedPokemon}
+          t={t}
+          currentLang={currentLang}
         />
       )}
 
       {/* ===================================================================
-       * TAB 2: COMPARATIVE ANATOMY DUEL BENCH (NEW)
+       * TAB 2: COMPARATIVE ANATOMY DUEL BENCH
        * =================================================================== */}
       {viewMode === 'comparative' && (
         <ComparativeAnatomyBench
           pokemonList={pokemonList}
           epochId={activeEpoch.id}
           onOpenModal={setSelectedPokemon}
+          t={t}
+          currentLang={currentLang}
         />
       )}
 
@@ -334,6 +340,7 @@ export function App() {
         <TectonicMap
           currentEpochIndex={currentEpochIndex}
           t={t}
+          currentLang={currentLang}
           onFilterType={(type) => {
             setSelectedType(type);
             setViewMode('specimens');
@@ -349,6 +356,8 @@ export function App() {
           pokemonList={pokemonList}
           epochId={activeEpoch.id}
           onSelectPokemon={setSelectedPokemon}
+          t={t}
+          currentLang={currentLang}
         />
       )}
 
@@ -396,7 +405,7 @@ export function App() {
                   color: filterByEpochOnly ? '#000000' : 'inherit',
                 }}
               >
-                {filterByEpochOnly ? `✓ LOCKED: ${activeEpoch.timeEra}` : `FILTER: ${activeEpoch.timeEra}`}
+                {filterByEpochOnly ? `${t.lockedEpochPrefix} ${activeEpoch.timeEra}` : `${t.filterEpochPrefix} ${activeEpoch.timeEra}`}
               </button>
             </div>
 
@@ -451,16 +460,16 @@ export function App() {
                     color: selectedType === type ? '#000000' : 'inherit',
                   }}
                 >
-                  {type}
+                  {type === 'All' ? t.allTypes : type}
                 </button>
               ))}
             </div>
 
             <div className="flex flex-wrap items-center justify-between text-[11px] opacity-80 pt-1 font-semibold gap-2">
               <span>
-                Showing <strong>{paginatedPokemon.length}</strong> of <strong>{filteredPokemon.length}</strong> matches (Total 1,025 catalogued)
+                {t.showingCountPrefix} <strong>{paginatedPokemon.length}</strong> {t.showingCountOf} <strong>{filteredPokemon.length}</strong> {t.showingCountMatches} {t.showingCountTotal}
               </span>
-              <span>Visual Specimen Codex: <strong>{activeEpoch.nameKey}</strong></span>
+              <span>{t.visualCodexLabel} <strong>{activeEpoch.nameKey}</strong></span>
             </div>
           </section>
 
@@ -468,8 +477,8 @@ export function App() {
           <main className="max-w-6xl mx-auto px-4 py-4">
             {paginatedPokemon.length === 0 ? (
               <div className="text-center py-16 border-2 border-dashed border-current/25 rounded-2xl p-8 opacity-75">
-                <p className="text-sm font-bold uppercase tracking-wider">No Geological Specimens Found</p>
-                <p className="text-xs mt-1">Try relaxing the search query, elemental type, or paleo-radar filter.</p>
+                <p className="text-sm font-bold uppercase tracking-wider">{t.noSpecimensFound}</p>
+                <p className="text-xs mt-1">{t.relaxFilterPrompt}</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -547,10 +556,10 @@ export function App() {
        * =================================================================== */}
       <footer className="mt-20 py-10 border-t border-current/20 text-center text-xs opacity-80 space-y-2">
         <div className="font-bold tracking-widest uppercase">
-          CHRONO-DEX // THE 300-MILLION-YEAR CONTINENTAL & ANATOMICAL ATLAS
+          {t.appTitle} // {t.appSubtitle}
         </div>
         <div>
-          Conceived & Built by <strong>sm000ky × Zero Two</strong> · 100% Procedural Naturalist Science
+          {t.footerTagline}
         </div>
         <div className="pt-2">
           <button
@@ -558,7 +567,7 @@ export function App() {
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg border border-current hover:bg-black/10 transition-colors cursor-pointer"
           >
             <ArrowUp className="w-3.5 h-3.5" />
-            <span>Back to Top</span>
+            <span>{t.backToTopBtn}</span>
           </button>
         </div>
       </footer>

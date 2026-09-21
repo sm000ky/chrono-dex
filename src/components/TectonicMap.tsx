@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
-import { EpochId, TectonicPlate } from '../types';
-import { EPOCHS, Translations } from '../lib/i18n';
+import React, { useState, useMemo } from 'react';
+import { EpochId, TectonicPlate, Language } from '../types';
+import { getLocalizedEpochs, getLocalizedPlateInfo, Translations } from '../lib/i18n';
 import { chronoAudio } from '../lib/audioEngine';
 import { Globe, Play, RotateCcw, Info, Sparkles, Activity } from 'lucide-react';
 
 interface TectonicMapProps {
   currentEpochIndex: number;
   t: Translations;
+  currentLang?: Language;
   onFilterType?: (type: string) => void;
 }
 
 export const TectonicMap: React.FC<TectonicMapProps> = ({
   currentEpochIndex,
   t,
+  currentLang = 'id',
   onFilterType,
 }) => {
-  const activeEpoch = EPOCHS[currentEpochIndex];
+  const epochs = useMemo(() => getLocalizedEpochs(currentLang), [currentLang]);
+  const activeEpoch = epochs[currentEpochIndex];
+  const plateDictionary = useMemo(() => getLocalizedPlateInfo(currentLang), [currentLang]);
   const isLightEra = activeEpoch.id === 'drift' || activeEpoch.id === 'modern';
   const [selectedPlate, setSelectedPlate] = useState<string | null>(null);
   const [isDrifting, setIsDrifting] = useState<boolean>(false);
@@ -63,10 +67,10 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
               title="Trigger tectonic plate movement simulation"
             >
               <Activity className={`w-3.5 h-3.5 ${isDrifting ? 'animate-spin' : ''}`} />
-              <span>{isDrifting ? 'Simulating Tremor...' : 'Trigger Drift'}</span>
+              <span>{isDrifting ? t.simulatingTremor : t.triggerDriftBtn}</span>
             </button>
             <div className="text-[11px] opacity-75 hidden sm:inline">
-              ERA: {activeEpoch.timeEra}
+              {t.eraLabel} {activeEpoch.timeEra}
             </div>
           </div>
         </div>
@@ -234,63 +238,20 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
 
         {/* Selected Plate Telemetry Dossier */}
         {selectedPlate && (() => {
-          const PLATE_INFO: Record<string, { types: string[]; desc: string }> = {
-            'Poké-Pangea Supercontinent': {
-              types: ['Ground', 'Fire', 'Rock'],
-              desc: 'Unified primordial supercontinent subjected to extreme magma convection and crustal volcanism. Endemic cradle of colossal reptilian and rock-burrowing lineages.',
-            },
-            'Kanto-Johto Northern Plate': {
-              types: ['Grass', 'Poison', 'Normal'],
-              desc: 'Temperate alluvial basin rich in primeval ancient forests and riparian marshes. Catalyzed specialized botanical vascular networks and acidic venom enzymes.',
-            },
-            'Sinnoh-Hoenn Southern Arc': {
-              types: ['Water', 'Dragon', 'Steel'],
-              desc: 'Oceanic spreading trench and island arc where deep-sea hydrostatic pressure stimulated hydro-osmotic organ chambers and heavy mineralized bone density.',
-            },
-            'Hisui Continental Plate': {
-              types: ['Ghost', 'Fighting', 'Ice'],
-              desc: 'Glacial orogeny driven by Mount Coronet tectonic uplift. Geothermal rifting through sub-zero snowfields yielded dense insulating fur and spiritual auric nodes.',
-            },
-            'Kanto-Johto Unified Plate': {
-              types: ['Electric', 'Psychic', 'Flying'],
-              desc: 'Stabilized modern continental crust with rich piezoelectric ore veins and high tropospheric jet streams.',
-            },
-            'Hoenn Volcanic Subplate': {
-              types: ['Fire', 'Water', 'Ground'],
-              desc: 'Subduction volcanic zone marked by Mount Chimney caldera activity and surrounding coral atolls.',
-            },
-            'Sinnoh Northern Shield': {
-              types: ['Ice', 'Steel', 'Rock'],
-              desc: 'Precambrian granite shield capped by perpetual permafrost and subterranean metallic ore corridors.',
-            },
-            'Kalos Continental Shelf': {
-              types: ['Fairy', 'Dragon', 'Psychic'],
-              desc: 'Limestone karst plateau with subterranean mineral springs emitting radiant bio-luminescent frequencies.',
-            },
-            'Paldean Iberian Plate': {
-              types: ['Fighting', 'Bug', 'Electric'],
-              desc: 'Meseta plateau encircling the Great Crater, characterized by high-salinity rock cliffs and conductive crystalline sediment.',
-            },
-            'Area Zero Temporal Vortex': {
-              types: ['Dragon', 'Electric', 'Fighting'],
-              desc: 'Non-Euclidean gravitational and temporal singularity where primordial paradox beasts and future metallic units converge.',
-            },
-          };
-
-          const plateData = PLATE_INFO[selectedPlate] || {
+          const plateData = plateDictionary[selectedPlate] || {
             types: ['Normal'],
-            desc: 'Geological stress along this craton fostered endemic speciation. Tectonic isolation separated gene pools, catalyzing specialized elemental organs.',
+            desc: selectedPlate,
           };
 
           return (
             <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-2.5 animate-in fade-in min-w-0">
               <div className="flex items-center justify-between text-xs font-bold gap-2 min-w-0" style={{ color: activeEpoch.accentHex }}>
-                <span className="truncate min-w-0 flex-1">CRATON TELEMETRY: {selectedPlate}</span>
+                <span className="truncate min-w-0 flex-1">{t.cratonTelemetryLabel} {selectedPlate}</span>
                 <button
                   onClick={() => setSelectedPlate(null)}
                   className="cursor-pointer text-xs opacity-70 hover:opacity-100 flex-shrink-0 px-2 py-0.5 rounded border border-current/30"
                 >
-                  Close [×]
+                  {t.closeBtn}
                 </button>
               </div>
 
@@ -301,7 +262,7 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
               {/* Endemic Elemental Conduit Filters */}
               <div className="pt-2 border-t border-current/15 flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-[10px] uppercase font-bold opacity-75 font-mono">Endemic Fauna Conduits:</span>
+                  <span className="text-[10px] uppercase font-bold opacity-75 font-mono">{t.endemicConduitsLabel}</span>
                   {plateData.types.map((type) => (
                     <button
                       key={type}
@@ -326,7 +287,7 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
                     }}
                     className="px-2.5 py-1 rounded text-[10px] font-bold font-mono bg-amber-500 text-black border border-amber-400 hover:bg-amber-400 cursor-pointer transition-all"
                   >
-                    View Fauna in Archive →
+                    {t.viewFaunaInArchiveBtn}
                   </button>
                 )}
               </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PokemonChronoEntry, EpochId } from '../types';
+import { PokemonChronoEntry, EpochId, Language } from '../types';
+import { Translations } from '../lib/i18n';
 import { chronoAudio } from '../lib/audioEngine';
 import {
   Layers,
@@ -14,6 +15,8 @@ interface ComparativeAnatomyBenchProps {
   pokemonList: PokemonChronoEntry[];
   epochId: EpochId;
   onOpenModal: (pokemon: PokemonChronoEntry) => void;
+  t: Translations;
+  currentLang?: Language;
 }
 
 const FEATURED_DUOS: [number, number][] = [
@@ -28,6 +31,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
   pokemonList,
   epochId,
   onOpenModal,
+  t,
 }) => {
   const [activeLayer, setActiveLayer] = useState<number>(1);
   const [specimenAId, setSpecimenAId] = useState<number>(6); // Charizard
@@ -123,20 +127,20 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
           <div className="flex items-center gap-2">
             <Scale className="w-5 h-5 opacity-90" />
             <span className="text-[11px] font-mono tracking-widest uppercase opacity-75">
-              LABORATORY BENCH
+              {t.benchSubtitle}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-wide mt-1">
-            Comparative Anatomy & Divergent Speciation
+            {t.benchHeading}
           </h2>
           <p className="text-xs opacity-75 max-w-2xl mt-1">
-            Analyze morphological divergence, skeletal density variance, and elemental core architecture between two distinct Pokémon specimens.
+            {t.benchDesc}
           </p>
         </div>
 
         {/* Preset Duo Selector */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <span className="text-[10px] uppercase font-mono opacity-60 mr-1 hidden sm:inline">Preserved Duos:</span>
+          <span className="text-[10px] uppercase font-mono opacity-60 mr-1 hidden sm:inline">{t.preservedDuosLabel}</span>
           {FEATURED_DUOS.map(([idA, idB], idx) => (
             <button
               key={idx}
@@ -156,10 +160,10 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
       {/* Layer Slicer Navigation */}
       <div className="flex flex-wrap gap-2 mb-6">
         {[
-          { id: 1, label: 'I. Dermis & Morphology', icon: Layers },
-          { id: 2, label: 'II. Osteology & Skeletal Delta', icon: Activity },
-          { id: 3, label: 'III. Bio-Elemental Reactor', icon: Flame },
-          { id: 4, label: 'IV. Tectonic Evolutionary Horizon', icon: Globe },
+          { id: 1, label: t.compLayer1, icon: Layers },
+          { id: 2, label: t.compLayer2, icon: Activity },
+          { id: 3, label: t.compLayer3, icon: Flame },
+          { id: 4, label: t.compLayer4, icon: Globe },
         ].map((layer) => {
           const Icon = layer.icon;
           const isActive = activeLayer === layer.id;
@@ -187,7 +191,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
           <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
             <div className="min-w-0 flex-1 space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-mono opacity-60">SPECIMEN ALPHA [A]</span>
+                <span className="text-[10px] font-mono opacity-60">{t.specimenAlphaLabel}</span>
                 <select
                   value={specimenAId}
                   onChange={(e) => {
@@ -195,7 +199,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     setSpecimenAId(Number(e.target.value));
                   }}
                   className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
-                  title="Switch Specimen Alpha from Archive"
+                  title={t.switchSpecimenAlpha}
                 >
                   {pokemonList.map((p) => (
                     <option key={p.national_id} value={p.national_id} className="bg-[#1a1a1a] text-white">
@@ -230,12 +234,12 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             />
             {activeLayer === 2 && (
               <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 border border-cyan-400 text-cyan-300 font-mono text-[9px] rounded">
-                X-RAY SKELETAL RADIOGRAM
+                {t.xrayRadiogramBadge}
               </div>
             )}
             {activeLayer === 3 && (
               <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
-                <span className="truncate max-w-full">CORE: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
+                <span className="truncate max-w-full">{t.primaryOrganLabel}: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
@@ -245,15 +249,15 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 1 && (
               <div className="grid grid-cols-2 gap-2 min-w-0">
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">STATURE</span>
+                  <span className="text-[10px] opacity-60 block">{t.statureLabel}</span>
                   <span className="font-bold truncate block">{specimenA.height_m} m</span>
                 </div>
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">MASS</span>
+                  <span className="text-[10px] opacity-60 block">{t.massLabel}</span>
                   <span className="font-bold truncate block">{specimenA.weight_kg} kg</span>
                 </div>
                 <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">DERMAL INTEGUMENT</span>
+                  <span className="text-[10px] opacity-60 block">{t.dermalIntegumentLabel}</span>
                   <p className="text-[11px] opacity-80 mt-0.5 break-words">{specimenA.anatomy.layer_1_dermis.description}</p>
                 </div>
               </div>
@@ -262,24 +266,24 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 2 && (
               <div className="space-y-2 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="opacity-75">BONE DENSITY INDEX:</span>
+                  <span className="opacity-75">{t.boneDensityIndexLabel}</span>
                   <span className="font-bold text-sm">{boneDensityA}</span>
                 </div>
                 <div className="w-full bg-current/15 h-2 rounded-full overflow-hidden">
                   <div className="bg-current h-full" style={{ width: `${Math.min(boneDensityA * 20, 100)}%` }} />
                 </div>
-                <p className="text-[11px] opacity-80 pt-1 break-words">SKELETON: {specimenA.anatomy.layer_2_osteology.skeleton_type}</p>
+                <p className="text-[11px] opacity-80 pt-1 break-words">{t.skeletonTypeLabel} {specimenA.anatomy.layer_2_osteology.skeleton_type}</p>
               </div>
             )}
 
             {activeLayer === 3 && (
               <div className="space-y-1.5 min-w-0">
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">PRIMARY ORGAN</span>
+                  <span className="text-[10px] opacity-60 block">{t.primaryOrganLabel}</span>
                   <span className="font-bold text-amber-300 break-words block">{specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
                 </div>
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">DESCRIPTION</span>
+                  <span className="text-[10px] opacity-60 block">{t.descLabel}</span>
                   <p className="text-[11px] opacity-80 break-words">{specimenA.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
                 </div>
               </div>
@@ -288,7 +292,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 4 && (
               <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
                 <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
-                  <span className="flex-shrink-0">TECTONIC ERA:</span>
+                  <span className="flex-shrink-0">{t.tectonicEraLabel}</span>
                   <span className="font-bold truncate">{specimenA.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
                 <p className="text-[11px] opacity-80 break-words">{specimenA.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
@@ -298,9 +302,9 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
 
           <button
             onClick={() => onOpenModal(specimenA)}
-            className="mt-4 w-full py-1.5 text-xs font-mono uppercase tracking-wider rounded border border-current/30 hover:bg-current/10 transition-colors"
+            className="mt-4 w-full py-1.5 text-xs font-mono uppercase tracking-wider rounded border border-current/30 hover:bg-current/10 transition-colors cursor-pointer"
           >
-            Open Full Specimen Dossier
+            {t.openDossierBtn}
           </button>
         </div>
 
@@ -308,8 +312,8 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
         <div className="flex items-center justify-center my-[-10px] lg:my-0 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-10">
           <button
             onClick={handleSwapSpecimens}
-            title="Swap Alpha & Beta Specimen"
-            className={`p-3 rounded-full border border-current/40 ${style.tabActive} ${style.glow} hover:scale-110 active:scale-95 transition-all`}
+            title={t.swapDuosTitle}
+            className={`p-3 rounded-full border border-current/40 ${style.tabActive} ${style.glow} hover:scale-110 active:scale-95 transition-all cursor-pointer`}
           >
             <ArrowRightLeft className="w-5 h-5" />
           </button>
@@ -320,7 +324,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
           <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
             <div className="min-w-0 flex-1 space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[10px] font-mono opacity-60">SPECIMEN BETA [B]</span>
+                <span className="text-[10px] font-mono opacity-60">{t.specimenBetaLabel}</span>
                 <select
                   value={specimenBId}
                   onChange={(e) => {
@@ -328,7 +332,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     setSpecimenBId(Number(e.target.value));
                   }}
                   className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
-                  title="Switch Specimen Beta from Archive"
+                  title={t.switchSpecimenBeta}
                 >
                   {pokemonList.map((p) => (
                     <option key={p.national_id} value={p.national_id} className="bg-[#1a1a1a] text-white">
@@ -363,12 +367,12 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             />
             {activeLayer === 2 && (
               <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 border border-cyan-400 text-cyan-300 font-mono text-[9px] rounded">
-                X-RAY SKELETAL RADIOGRAM
+                {t.xrayRadiogramBadge}
               </div>
             )}
             {activeLayer === 3 && (
               <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
-                <span className="truncate max-w-full">CORE: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
+                <span className="truncate max-w-full">{t.primaryOrganLabel}: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
@@ -378,15 +382,15 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 1 && (
               <div className="grid grid-cols-2 gap-2 min-w-0">
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">STATURE</span>
+                  <span className="text-[10px] opacity-60 block">{t.statureLabel}</span>
                   <span className="font-bold truncate block">{specimenB.height_m} m</span>
                 </div>
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">MASS</span>
+                  <span className="text-[10px] opacity-60 block">{t.massLabel}</span>
                   <span className="font-bold truncate block">{specimenB.weight_kg} kg</span>
                 </div>
                 <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">DERMAL INTEGUMENT</span>
+                  <span className="text-[10px] opacity-60 block">{t.dermalIntegumentLabel}</span>
                   <p className="text-[11px] opacity-80 mt-0.5 break-words">{specimenB.anatomy.layer_1_dermis.description}</p>
                 </div>
               </div>
@@ -395,24 +399,24 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 2 && (
               <div className="space-y-2 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="opacity-75">BONE DENSITY INDEX:</span>
+                  <span className="opacity-75">{t.boneDensityIndexLabel}</span>
                   <span className="font-bold text-sm">{boneDensityB}</span>
                 </div>
                 <div className="w-full bg-current/15 h-2 rounded-full overflow-hidden">
                   <div className="bg-current h-full" style={{ width: `${Math.min(boneDensityB * 20, 100)}%` }} />
                 </div>
-                <p className="text-[11px] opacity-80 pt-1 break-words">SKELETON: {specimenB.anatomy.layer_2_osteology.skeleton_type}</p>
+                <p className="text-[11px] opacity-80 pt-1 break-words">{t.skeletonTypeLabel} {specimenB.anatomy.layer_2_osteology.skeleton_type}</p>
               </div>
             )}
 
             {activeLayer === 3 && (
               <div className="space-y-1.5 min-w-0">
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">PRIMARY ORGAN</span>
+                  <span className="text-[10px] opacity-60 block">{t.primaryOrganLabel}</span>
                   <span className="font-bold text-amber-300 break-words block">{specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
                 </div>
                 <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
-                  <span className="text-[10px] opacity-60 block">DESCRIPTION</span>
+                  <span className="text-[10px] opacity-60 block">{t.descLabel}</span>
                   <p className="text-[11px] opacity-80 break-words">{specimenB.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
                 </div>
               </div>
@@ -421,7 +425,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             {activeLayer === 4 && (
               <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
                 <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
-                  <span className="flex-shrink-0">TECTONIC ERA:</span>
+                  <span className="flex-shrink-0">{t.tectonicEraLabel}</span>
                   <span className="font-bold truncate">{specimenB.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
                 <p className="text-[11px] opacity-80 break-words">{specimenB.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
@@ -433,7 +437,7 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
             onClick={() => onOpenModal(specimenB)}
             className="mt-4 w-full py-1.5 text-xs font-mono uppercase tracking-wider rounded border border-current/30 hover:bg-current/10 transition-colors cursor-pointer"
           >
-            Open Full Specimen Dossier
+            {t.openDossierBtn}
           </button>
         </div>
       </div>
@@ -442,48 +446,48 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
       <div className={`mt-6 p-4 rounded-xl ${style.card} border border-current/20 font-mono text-xs min-w-0`}>
         <div className="flex items-center justify-between mb-2">
           <span className="font-bold uppercase tracking-wider opacity-80">
-            Divergent Morphological Delta
+            {t.morphologicalDeltaTitle}
           </span>
-          <span className="text-[10px] opacity-60">DIAGNOSTIC DELTA SUMMARY</span>
+          <span className="text-[10px] opacity-60">{t.deltaSummarySubtitle}</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center min-w-0">
           <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
-            <span className="text-[10px] opacity-60 block">BONE DENSITY DELTA</span>
+            <span className="text-[10px] opacity-60 block">{t.boneDensityDelta}</span>
             <span className="font-bold text-base truncate block">
               {Number(boneDensityDiff) > 0 ? `+${boneDensityDiff}` : boneDensityDiff} pts
             </span>
             <span className="text-[9px] opacity-60 block mt-0.5 break-words">
               {Number(boneDensityDiff) > 0
-                ? `${specimenA.name} is denser`
+                ? `${specimenA.name} ${t.isDenser}`
                 : Number(boneDensityDiff) < 0
-                ? `${specimenB.name} is denser`
-                : 'Identical bone density'}
+                ? `${specimenB.name} ${t.isDenser}`
+                : t.equalDensity}
             </span>
           </div>
           <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
-            <span className="text-[10px] opacity-60 block">STATURE VARIANCE</span>
+            <span className="text-[10px] opacity-60 block">{t.statureVariance}</span>
             <span className="font-bold text-base truncate block">
               {Number(heightDiff) > 0 ? `+${heightDiff}` : heightDiff} m
             </span>
             <span className="text-[9px] opacity-60 block mt-0.5 break-words">
               {Number(heightDiff) > 0
-                ? `${specimenA.name} is taller`
+                ? `${specimenA.name} ${t.isTaller}`
                 : Number(heightDiff) < 0
-                ? `${specimenB.name} is taller`
-                : 'Equivalent stature'}
+                ? `${specimenB.name} ${t.isTaller}`
+                : t.equalStature}
             </span>
           </div>
           <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
-            <span className="text-[10px] opacity-60 block">MASS DISPARITY</span>
+            <span className="text-[10px] opacity-60 block">{t.massDisparity}</span>
             <span className="font-bold text-base truncate block">
               {Number(weightDiff) > 0 ? `+${weightDiff}` : weightDiff} kg
             </span>
             <span className="text-[9px] opacity-60 block mt-0.5 break-words">
               {Number(weightDiff) > 0
-                ? `${specimenA.name} is heavier`
+                ? `${specimenA.name} ${t.isHeavier}`
                 : Number(weightDiff) < 0
-                ? `${specimenB.name} is heavier`
-                : 'Equal body mass'}
+                ? `${specimenB.name} ${t.isHeavier}`
+                : t.equalMass}
             </span>
           </div>
         </div>

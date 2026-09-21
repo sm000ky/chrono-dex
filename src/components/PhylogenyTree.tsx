@@ -1,80 +1,26 @@
-import React, { useState } from 'react';
-import { PokemonChronoEntry, EpochId } from '../types';
+import React, { useState, useMemo } from 'react';
+import { PokemonChronoEntry, EpochId, Language } from '../types';
+import { getLocalizedClades, Translations } from '../lib/i18n';
 import { chronoAudio } from '../lib/audioEngine';
-import { GitBranch, Sparkles, ChevronRight, Dna } from 'lucide-react';
+import { GitBranch, Dna } from 'lucide-react';
 
 interface PhylogenyTreeProps {
   pokemonList: PokemonChronoEntry[];
   epochId: EpochId;
   onSelectPokemon: (pokemon: PokemonChronoEntry) => void;
+  t: Translations;
+  currentLang?: Language;
 }
-
-interface CladeBranch {
-  id: string;
-  name: string;
-  latinClass: string;
-  ancestorEpoch: string;
-  evolutionaryAdaptation: string;
-  representativeIds: number[];
-}
-
-const CLADES: CladeBranch[] = [
-  {
-    id: 'primordial_root',
-    name: 'Universal Root & Primitive Paradox',
-    latinClass: 'Cladus Primordialis',
-    ancestorEpoch: '300 Mya (Poké-Pangea)',
-    evolutionaryAdaptation: 'Progenitor cellular matrix possessing plastic stem DNA capable of speciating into all 18 elemental conduits.',
-    representativeIds: [151, 138, 140, 142, 984], // Mew, Omanyte, Kabuto, Aerodactyl, Great Tusk
-  },
-  {
-    id: 'draco_sauria',
-    name: 'Draconic & Sauropsid Lineage',
-    latinClass: 'Ordo Dracosauria',
-    ancestorEpoch: '180 Mya (Mesozoic Rifting)',
-    evolutionaryAdaptation: 'Pyrophoric thoracic glands, lightweight hollow osteological frameworks, and dense thermal scales.',
-    representativeIds: [6, 130, 149, 445, 1007], // Charizard, Gyarados, Dragonite, Garchomp, Koraidon
-  },
-  {
-    id: 'mammalia_terrestria',
-    name: 'Terrestrial Mammalian Adaptations',
-    latinClass: 'Classis Mammaliaformes',
-    ancestorEpoch: '120 Mya (Tethys Basin)',
-    evolutionaryAdaptation: 'Endothermic homeothermy, subcutaneous fur insulation, and cerebral pineal bio-auric sensors.',
-    representativeIds: [25, 133, 448, 901], // Pikachu, Eevee, Lucario, Ursaluna
-  },
-  {
-    id: 'pneumatic_avians',
-    name: 'Pneumatic Avian Aerofoils',
-    latinClass: 'Superordo Ornithurae',
-    ancestorEpoch: '90 Mya (Mountain Orogeny)',
-    evolutionaryAdaptation: 'Trabecular pneumatic bone architecture, plumage keratin barbs, and atmospheric pressure sensing.',
-    representativeIds: [18, 277, 663, 823], // Pidgeot, Swellow, Talonflame, Corviknight
-  },
-  {
-    id: 'arthropoda_chitin',
-    name: 'Chitinous & Armored Exoskeletons',
-    latinClass: 'Phylum Arthropoda Bio-Metallica',
-    ancestorEpoch: '240 Mya (Ancient Seabed)',
-    evolutionaryAdaptation: 'High-density mineralized chitin plates, metallic iron incorporation, and hemolymph acid storage.',
-    representativeIds: [127, 212, 768, 900], // Pinsir, Scizor, Golisopod, Kleavor
-  },
-  {
-    id: 'temporal_cosmic',
-    name: 'Cosmic Anomalies & Temporal Paradox',
-    latinClass: 'Classis Singularis Trans-Dimensionis',
-    ancestorEpoch: 'Area Zero & Deep Space',
-    evolutionaryAdaptation: 'Quantum crystalline lattice structures, anti-gravity levitation fields, and radioactive temporal emission.',
-    representativeIds: [386, 890, 1008, 1025], // Deoxys, Eternatus, Miraidon, Pecharunt
-  },
-];
 
 export const PhylogenyTree: React.FC<PhylogenyTreeProps> = ({
   pokemonList,
   onSelectPokemon,
+  t,
+  currentLang = 'id',
 }) => {
+  const clades = useMemo(() => getLocalizedClades(currentLang), [currentLang]);
   const [selectedCladeId, setSelectedCladeId] = useState<string>('primordial_root');
-  const activeClade = CLADES.find((c) => c.id === selectedCladeId) || CLADES[0];
+  const activeClade = clades.find((c) => c.id === selectedCladeId) || clades[0];
 
   const handleSelectClade = (id: string) => {
     chronoAudio.playLayerPeel(1);
@@ -88,19 +34,19 @@ export const PhylogenyTree: React.FC<PhylogenyTreeProps> = ({
         <div className="border-b-2 border-current/20 pb-4 space-y-1">
           <div className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-[#E07A28]">
             <Dna className="w-3.5 h-3.5" />
-            <span>MACRO-EVOLUTIONARY PHYLOGENY // 300 MILLION YEARS</span>
+            <span>{t.phyloSubtitle}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold tracking-tight">
-            The Grand Tree of Speciation
+            {t.phyloHeading}
           </h2>
           <p className="text-xs opacity-75 font-serif italic">
-            Trace how single primordial ancestral lineages diverged into specialized taxonomic clades across planetary geological epochs.
+            {t.phyloDesc}
           </p>
         </div>
 
         {/* Horizontal Clade Navigator */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-          {CLADES.map((clade) => (
+          {clades.map((clade) => (
             <button
               key={clade.id}
               onClick={() => handleSelectClade(clade.id)}
@@ -125,12 +71,12 @@ export const PhylogenyTree: React.FC<PhylogenyTreeProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-current/15 pb-3 min-w-0">
             <div className="min-w-0 flex-1">
               <span className="text-[10px] uppercase font-bold text-amber-500 truncate block">
-                PHYLOGENETIC BRANCH: {activeClade.latinClass}
+                {t.phyloBranchLabel} {activeClade.latinClass}
               </span>
               <h3 className="text-xl font-serif font-bold break-words">{activeClade.name}</h3>
             </div>
             <div className="px-3 py-1 rounded bg-black/30 border border-current/20 text-xs font-bold font-mono flex-shrink-0">
-              ERA OF ORIGIN: {activeClade.ancestorEpoch}
+              {t.phyloEraLabel} {activeClade.ancestorEpoch}
             </div>
           </div>
 
@@ -141,7 +87,7 @@ export const PhylogenyTree: React.FC<PhylogenyTreeProps> = ({
           {/* Representative Species Cards */}
           <div className="space-y-2 pt-2">
             <div className="text-[10px] font-bold uppercase tracking-wider text-amber-500">
-              KEY REPRESENTATIVE TAXA IN THIS CLADE (CLICK TO DISSECT):
+              {t.keyTaxaLabel}
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">

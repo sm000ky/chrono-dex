@@ -194,7 +194,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
             </h2>
 
             <div className={`text-xs font-serif italic break-words ${style.subtext}`}>
-              Taxonomia Binomial: <strong className={style.accentText}>{pokemon.binomial_name}</strong>
+              {t.taxonomyLabel} <strong className={style.accentText}>{pokemon.binomial_name}</strong>
             </div>
           </div>
 
@@ -206,7 +206,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                   onClick={handlePrev}
                   disabled={!prevPokemon}
                   className="p-2 rounded-lg border-2 border-current hover:bg-black/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all cursor-pointer"
-                  title={prevPokemon ? `Previous: #${prevPokemon.national_id} ${prevPokemon.name}` : 'No previous specimen'}
+                  title={prevPokemon ? `${t.prevSpecimenTooltip} #${prevPokemon.national_id} ${prevPokemon.name}` : t.noPrevSpecimen}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -214,7 +214,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                   onClick={handleNext}
                   disabled={!nextPokemon}
                   className="p-2 rounded-lg border-2 border-current hover:bg-black/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all cursor-pointer"
-                  title={nextPokemon ? `Next: #${nextPokemon.national_id} ${nextPokemon.name}` : 'No next specimen'}
+                  title={nextPokemon ? `${t.nextSpecimenTooltip} #${nextPokemon.national_id} ${nextPokemon.name}` : t.noNextSpecimen}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -331,7 +331,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
             {(activeLayer === 2 || activeLayer === 3) && (
               <div className="w-full max-w-xs mt-3 flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-lg border border-current/20 z-10 text-[11px]">
                 <Sliders className="w-3.5 h-3.5 opacity-80" />
-                <span className="font-bold text-[10px] uppercase whitespace-nowrap">Peel Skin:</span>
+                <span className="font-bold text-[10px] uppercase whitespace-nowrap">{t.scalpelPeelSkin}</span>
                 <input
                   type="range"
                   min="0"
@@ -348,19 +348,19 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
           {/* DEDICATED SEPARATE STATUS STRIP (NO OVERLAPPING!) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs min-w-0">
             <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>VIEWING LAYER</span>
-              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>LAYER {activeLayer} OF 4</strong>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.viewingLayerLabel}</span>
+              <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>{t.layerXof4.replace('{layer}', String(activeLayer))}</strong>
             </div>
             <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>TIME EPOCH</span>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.timeEpochLabel}</span>
               <strong className="text-xs sm:text-sm truncate max-w-full">{pokemon.epoch.time_label}</strong>
             </div>
             <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>TECTONIC REGION</span>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.tectonicRegionLabel}</span>
               <strong className="text-[11px] sm:text-xs leading-tight break-words max-w-full line-clamp-2 text-center">{pokemon.epoch.epoch_name}</strong>
             </div>
             <div className={`p-2.5 rounded-lg border flex flex-col items-center justify-center text-center min-w-0 overflow-hidden ${style.card}`}>
-              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>BONE DENSITY</span>
+              <span className={`text-[10px] uppercase font-bold truncate max-w-full ${style.subtext}`}>{t.boneDensityLabel}</span>
               <strong className={`text-xs sm:text-sm truncate max-w-full ${style.accentText}`}>{pokemon.anatomy.layer_2_osteology.bone_density_index}</strong>
             </div>
           </div>
@@ -371,9 +371,9 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className="flex items-center gap-2 text-xs min-w-0 flex-1">
                 <Crosshair className={`w-4 h-4 flex-shrink-0 ${style.accentText}`} />
                 <span className="break-words min-w-0">
-                  {activeHotspot === 'cranial' && `[PIN 1: Cranial Bio-Capacitor] Neural node channeling ${pokemon.types[0]} frequency waves.`}
-                  {activeHotspot === 'elemental' && `[PIN 2: ${pokemon.anatomy.layer_3_elemental_core.primary_organ}] ${pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}`}
-                  {activeHotspot === 'appendage' && `[PIN 3: Peripheral Conductor] Musculoskeletal kinetic conduits discharging kinetic torque.`}
+                  {activeHotspot === 'cranial' && `[PIN 1: Cranial Bio-Capacitor] ${t.pin1Desc}`}
+                  {activeHotspot === 'elemental' && `[PIN 2: ${pokemon.anatomy.layer_3_elemental_core.primary_organ}] ${t.pin2Desc}`}
+                  {activeHotspot === 'appendage' && `[PIN 3: Peripheral Conductor] ${t.pin3Desc}`}
                 </span>
               </div>
               <button onClick={() => setActiveHotspot(null)} className="opacity-70 hover:opacity-100 flex-shrink-0 p-1 cursor-pointer">
@@ -398,7 +398,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <div className={`pt-3 border-t border-current/15 flex flex-wrap gap-4 text-xs font-semibold ${style.subtext}`}>
                 <span>{t.height}: <strong className="text-current">{pokemon.height_m} m</strong></span>
                 <span>{t.weight}: <strong className="text-current">{pokemon.weight_kg} kg</strong></span>
-                <span>TYPES: <strong className="text-current">{pokemon.types.join(' / ')}</strong></span>
+                <span>{t.typesLabel} <strong className="text-current">{pokemon.types.join(' / ')}</strong></span>
               </div>
             </div>
           )}
@@ -412,12 +412,12 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                   <span className="truncate">{pokemon.anatomy.layer_2_osteology.title}</span>
                 </span>
                 <span className={`text-xs font-bold flex-shrink-0 ${style.accentText}`}>
-                  DENSITY: {pokemon.anatomy.layer_2_osteology.bone_density_index}
+                  {t.boneDensityLabel}: {pokemon.anatomy.layer_2_osteology.bone_density_index}
                 </span>
               </div>
 
               <div className="text-sm font-bold break-words">
-                Framework: <span className={style.accentText}>{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
+                {t.frameworkLabel} <span className={style.accentText}>{pokemon.anatomy.layer_2_osteology.skeleton_type}</span>
               </div>
 
               <p className="font-serif text-sm sm:text-base leading-relaxed italic break-words">
@@ -446,13 +446,13 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                   <Zap className="w-4 h-4 flex-shrink-0" />
                   <span className="truncate">{pokemon.anatomy.layer_3_elemental_core.title}</span>
                 </span>
-                <span className="text-xs font-bold flex-shrink-0">{t.elementalReactor}</span>
+                <span className="text-xs font-bold flex-shrink-0">{t.bioReactorBadge}</span>
               </div>
 
               <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5 min-w-0">
                 <div className={`text-xs font-bold ${style.accentText} flex items-center gap-1.5 min-w-0`}>
                   <Flame className="w-4 h-4 flex-shrink-0" />
-                  <span className="break-words">PRIMARY: {pokemon.anatomy.layer_3_elemental_core.primary_organ}</span>
+                  <span className="break-words">{t.primaryLabel} {pokemon.anatomy.layer_3_elemental_core.primary_organ}</span>
                 </div>
                 <p className="font-serif text-xs sm:text-sm leading-relaxed italic break-words">
                   {pokemon.anatomy.layer_3_elemental_core.primary_organ_desc}
@@ -463,7 +463,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
                 <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5 min-w-0">
                   <div className="text-xs font-bold text-cyan-400 flex items-center gap-1.5 min-w-0">
                     <Zap className="w-4 h-4 flex-shrink-0" />
-                    <span className="break-words">SECONDARY: {pokemon.anatomy.layer_3_elemental_core.secondary_organ}</span>
+                    <span className="break-words">{t.secondaryLabel} {pokemon.anatomy.layer_3_elemental_core.secondary_organ}</span>
                   </div>
                   <p className="font-serif text-xs sm:text-sm leading-relaxed italic break-words">
                     {pokemon.anatomy.layer_3_elemental_core.secondary_organ_desc}
@@ -486,7 +486,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
               <div className="p-3.5 rounded-lg bg-black/15 border border-current/20 space-y-1.5 min-w-0">
                 <div className={`text-xs font-bold ${style.accentText} break-words`}>
-                  TECTONIC TRIGGER: {pokemon.anatomy.layer_4_geologic_speciation.tectonic_event}
+                  {t.tectonicTriggerLabel} {pokemon.anatomy.layer_4_geologic_speciation.tectonic_event}
                 </div>
                 <p className="font-serif text-xs sm:text-sm leading-relaxed italic break-words">
                   "{pokemon.anatomy.layer_4_geologic_speciation.speciation_notes}"
@@ -494,7 +494,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               </div>
 
               <div className="space-y-1.5 pt-1 min-w-0">
-                <div className={`text-[10px] uppercase font-bold ${style.subtext}`}>FIELD NATURALIST LOG:</div>
+                <div className={`text-[10px] uppercase font-bold ${style.subtext}`}>{t.naturalistFieldLog}</div>
                 <p className="font-serif text-xs sm:text-sm leading-relaxed italic border-l-2 pl-3 break-words" style={{ borderColor: 'currentColor' }}>
                   "{pokemon.description}"
                 </p>
