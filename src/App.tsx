@@ -385,7 +385,7 @@ export function App() {
                   chronoAudio.playLayerPeel(0);
                   setFilterByEpochOnly(!filterByEpochOnly);
                 }}
-                className={`px-4 py-3 rounded-xl border-2 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap ${
+                className={`w-full sm:w-auto px-4 py-3 rounded-xl border-2 text-xs font-bold uppercase transition-all cursor-pointer truncate max-w-full ${
                   filterByEpochOnly
                     ? 'text-black shadow-[0_0_15px_currentColor]'
                     : 'hover:bg-black/10'

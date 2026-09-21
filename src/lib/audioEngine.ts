@@ -418,6 +418,150 @@ class ChronoAudioEngine {
       osc.stop(t + 0.65);
     });
   }
+
+  /**
+   * Deep pulsing bio-resonance surge when stimulating specimen elemental organ
+   */
+  public playBioResonance(type = 'normal'): void {
+    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    try {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const t = this.ctx.currentTime;
+
+      // Sub harmonic pulse
+      const subOsc = this.ctx.createOscillator();
+      const subGain = this.ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(82.4, t); // Low E
+      subOsc.frequency.exponentialRampToValueAtTime(164.8, t + 0.35);
+      subOsc.frequency.exponentialRampToValueAtTime(55, t + 0.9);
+
+      subGain.gain.setValueAtTime(0.001, t);
+      subGain.gain.linearRampToValueAtTime(0.28, t + 0.08);
+      subGain.gain.exponentialRampToValueAtTime(0.001, t + 0.95);
+
+      subOsc.connect(subGain);
+      subGain.connect(this.masterGain);
+      subOsc.start(t);
+      subOsc.stop(t + 1.0);
+
+      // Resonant harmonic sweep
+      const sweepOsc = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const sweepGain = this.ctx.createGain();
+
+      sweepOsc.type = type.toLowerCase() === 'electric' ? 'sawtooth' : 'triangle';
+      sweepOsc.frequency.setValueAtTime(220, t);
+      sweepOsc.frequency.exponentialRampToValueAtTime(880, t + 0.25);
+      sweepOsc.frequency.exponentialRampToValueAtTime(330, t + 0.8);
+
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(400, t);
+      filter.frequency.exponentialRampToValueAtTime(2400, t + 0.3);
+      filter.frequency.exponentialRampToValueAtTime(500, t + 0.85);
+      filter.Q.setValueAtTime(3.5, t);
+
+      sweepGain.gain.setValueAtTime(0.001, t);
+      sweepGain.gain.linearRampToValueAtTime(0.18, t + 0.05);
+      sweepGain.gain.exponentialRampToValueAtTime(0.001, t + 0.88);
+
+      sweepOsc.connect(filter);
+      filter.connect(sweepGain);
+      sweepGain.connect(this.masterGain);
+
+      sweepOsc.start(t);
+      sweepOsc.stop(t + 0.9);
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Tactile fossil chisel scrape / dusting sound
+   */
+  public playFossilChisel(): void {
+    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    try {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const t = this.ctx.currentTime;
+
+      // Noise scraping burst
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.09);
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+      }
+
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1400 + Math.random() * 600, t);
+      filter.Q.setValueAtTime(2.2, t);
+
+      const gain = this.ctx.createGain();
+      gain.gain.setValueAtTime(0.001, t);
+      gain.gain.linearRampToValueAtTime(0.22, t + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+
+      noise.start(t);
+
+      // Chisel metallic tap
+      const osc = this.ctx.createOscillator();
+      const oscGain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(950 + Math.random() * 250, t);
+      osc.frequency.exponentialRampToValueAtTime(320, t + 0.04);
+
+      oscGain.gain.setValueAtTime(0.12, t);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, t + 0.045);
+
+      osc.connect(oscGain);
+      oscGain.connect(this.masterGain);
+
+      osc.start(t);
+      osc.stop(t + 0.05);
+    } catch {
+      // ignore
+    }
+  }
+
+  /**
+   * Harmonious discovery chord when fossil excavation reaches 100%
+   */
+  public playExcavationComplete(): void {
+    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    try {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      const t = this.ctx.currentTime;
+      const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C major pentatonic
+      notes.forEach((freq, idx) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t + idx * 0.06);
+
+        gain.gain.setValueAtTime(0.0001, t + idx * 0.06);
+        gain.gain.linearRampToValueAtTime(0.08, t + idx * 0.06 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + idx * 0.06 + 0.8);
+
+        osc.connect(gain);
+        gain.connect(this.masterGain!);
+
+        osc.start(t + idx * 0.06);
+        osc.stop(t + idx * 0.06 + 0.85);
+      });
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export const chronoAudio = new ChronoAudioEngine();

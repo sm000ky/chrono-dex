@@ -183,16 +183,16 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
       {/* Duel Bench Main Arena */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 relative">
         {/* Specimen A Card */}
-        <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between`}>
-          <div className="flex items-center justify-between border-b border-current/15 pb-3 mb-4">
-            <div>
+        <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between min-w-0`}>
+          <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
+            <div className="min-w-0 flex-1">
               <span className="text-[10px] font-mono opacity-60">SPECIMEN ALPHA [A]</span>
-              <h3 className="text-lg sm:text-xl font-bold">{specimenA.name}</h3>
-              <p className="text-xs italic opacity-80">{specimenA.binomial_name}</p>
+              <h3 className="text-lg sm:text-xl font-bold truncate">{specimenA.name}</h3>
+              <p className="text-xs italic opacity-80 break-words">{specimenA.binomial_name}</p>
             </div>
-            <div className="text-right">
+            <div className="text-right flex-shrink-0">
               <span className="text-xs font-mono font-bold">#{String(specimenA.national_id).padStart(4, '0')}</span>
-              <div className="flex gap-1 mt-1">
+              <div className="flex flex-wrap justify-end gap-1 mt-1">
                 {specimenA.types.map((type) => (
                   <span key={type} className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-current/10 border border-current/20 uppercase">
                     {type}
@@ -217,33 +217,33 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
               </div>
             )}
             {activeLayer === 3 && (
-              <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between">
-                <span>CORE: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
+              <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
+                <span className="truncate max-w-full">CORE: {specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
 
           {/* Layer-Specific Details */}
-          <div className="text-xs font-mono space-y-2 border-t border-current/15 pt-3">
+          <div className="text-xs font-mono space-y-2 border-t border-current/15 pt-3 min-w-0">
             {activeLayer === 1 && (
-              <div className="grid grid-cols-2 gap-2">
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+              <div className="grid grid-cols-2 gap-2 min-w-0">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">STATURE</span>
-                  <span className="font-bold">{specimenA.height_m} m</span>
+                  <span className="font-bold truncate block">{specimenA.height_m} m</span>
                 </div>
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">MASS</span>
-                  <span className="font-bold">{specimenA.weight_kg} kg</span>
+                  <span className="font-bold truncate block">{specimenA.weight_kg} kg</span>
                 </div>
-                <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10">
+                <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">DERMAL INTEGUMENT</span>
-                  <p className="text-[11px] opacity-80 mt-0.5">{specimenA.anatomy.layer_1_dermis.description}</p>
+                  <p className="text-[11px] opacity-80 mt-0.5 break-words">{specimenA.anatomy.layer_1_dermis.description}</p>
                 </div>
               </div>
             )}
 
             {activeLayer === 2 && (
-              <div className="space-y-2">
+              <div className="space-y-2 min-w-0">
                 <div className="flex items-center justify-between">
                   <span className="opacity-75">BONE DENSITY INDEX:</span>
                   <span className="font-bold text-sm">{boneDensityA}</span>
@@ -251,30 +251,30 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                 <div className="w-full bg-current/15 h-2 rounded-full overflow-hidden">
                   <div className="bg-current h-full" style={{ width: `${Math.min(boneDensityA * 20, 100)}%` }} />
                 </div>
-                <p className="text-[11px] opacity-80 pt-1">SKELETON: {specimenA.anatomy.layer_2_osteology.skeleton_type}</p>
+                <p className="text-[11px] opacity-80 pt-1 break-words">SKELETON: {specimenA.anatomy.layer_2_osteology.skeleton_type}</p>
               </div>
             )}
 
             {activeLayer === 3 && (
-              <div className="space-y-1.5">
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+              <div className="space-y-1.5 min-w-0">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">PRIMARY ORGAN</span>
-                  <span className="font-bold text-amber-300">{specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
+                  <span className="font-bold text-amber-300 break-words block">{specimenA.anatomy.layer_3_elemental_core.primary_organ}</span>
                 </div>
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">DESCRIPTION</span>
-                  <p className="text-[11px] opacity-80">{specimenA.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
+                  <p className="text-[11px] opacity-80 break-words">{specimenA.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
                 </div>
               </div>
             )}
 
             {activeLayer === 4 && (
-              <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1">
-                <div className="flex justify-between items-center text-[10px] opacity-75">
-                  <span>TECTONIC ERA:</span>
-                  <span className="font-bold">{specimenA.anatomy.layer_4_geologic_speciation.time_era}</span>
+              <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
+                <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
+                  <span className="flex-shrink-0">TECTONIC ERA:</span>
+                  <span className="font-bold truncate">{specimenA.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
-                <p className="text-[11px] opacity-80">{specimenA.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
+                <p className="text-[11px] opacity-80 break-words">{specimenA.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
               </div>
             )}
           </div>
@@ -299,16 +299,16 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
         </div>
 
         {/* Specimen B Card */}
-        <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between`}>
-          <div className="flex items-center justify-between border-b border-current/15 pb-3 mb-4">
-            <div>
+        <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between min-w-0`}>
+          <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
+            <div className="min-w-0 flex-1">
               <span className="text-[10px] font-mono opacity-60">SPECIMEN BETA [B]</span>
-              <h3 className="text-lg sm:text-xl font-bold">{specimenB.name}</h3>
-              <p className="text-xs italic opacity-80">{specimenB.binomial_name}</p>
+              <h3 className="text-lg sm:text-xl font-bold truncate">{specimenB.name}</h3>
+              <p className="text-xs italic opacity-80 break-words">{specimenB.binomial_name}</p>
             </div>
-            <div className="text-right">
+            <div className="text-right flex-shrink-0">
               <span className="text-xs font-mono font-bold">#{String(specimenB.national_id).padStart(4, '0')}</span>
-              <div className="flex gap-1 mt-1">
+              <div className="flex flex-wrap justify-end gap-1 mt-1">
                 {specimenB.types.map((type) => (
                   <span key={type} className="px-1.5 py-0.5 text-[9px] font-mono rounded bg-current/10 border border-current/20 uppercase">
                     {type}
@@ -333,33 +333,33 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
               </div>
             )}
             {activeLayer === 3 && (
-              <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between">
-                <span>CORE: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
+              <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-black/80 border border-amber-500 text-amber-200 font-mono text-[9px] rounded flex items-center justify-between min-w-0">
+                <span className="truncate max-w-full">CORE: {specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
               </div>
             )}
           </div>
 
           {/* Layer-Specific Details */}
-          <div className="text-xs font-mono space-y-2 border-t border-current/15 pt-3">
+          <div className="text-xs font-mono space-y-2 border-t border-current/15 pt-3 min-w-0">
             {activeLayer === 1 && (
-              <div className="grid grid-cols-2 gap-2">
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+              <div className="grid grid-cols-2 gap-2 min-w-0">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">STATURE</span>
-                  <span className="font-bold">{specimenB.height_m} m</span>
+                  <span className="font-bold truncate block">{specimenB.height_m} m</span>
                 </div>
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">MASS</span>
-                  <span className="font-bold">{specimenB.weight_kg} kg</span>
+                  <span className="font-bold truncate block">{specimenB.weight_kg} kg</span>
                 </div>
-                <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10">
+                <div className="col-span-2 p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">DERMAL INTEGUMENT</span>
-                  <p className="text-[11px] opacity-80 mt-0.5">{specimenB.anatomy.layer_1_dermis.description}</p>
+                  <p className="text-[11px] opacity-80 mt-0.5 break-words">{specimenB.anatomy.layer_1_dermis.description}</p>
                 </div>
               </div>
             )}
 
             {activeLayer === 2 && (
-              <div className="space-y-2">
+              <div className="space-y-2 min-w-0">
                 <div className="flex items-center justify-between">
                   <span className="opacity-75">BONE DENSITY INDEX:</span>
                   <span className="font-bold text-sm">{boneDensityB}</span>
@@ -367,37 +367,37 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                 <div className="w-full bg-current/15 h-2 rounded-full overflow-hidden">
                   <div className="bg-current h-full" style={{ width: `${Math.min(boneDensityB * 20, 100)}%` }} />
                 </div>
-                <p className="text-[11px] opacity-80 pt-1">SKELETON: {specimenB.anatomy.layer_2_osteology.skeleton_type}</p>
+                <p className="text-[11px] opacity-80 pt-1 break-words">SKELETON: {specimenB.anatomy.layer_2_osteology.skeleton_type}</p>
               </div>
             )}
 
             {activeLayer === 3 && (
-              <div className="space-y-1.5">
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+              <div className="space-y-1.5 min-w-0">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">PRIMARY ORGAN</span>
-                  <span className="font-bold text-amber-300">{specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
+                  <span className="font-bold text-amber-300 break-words block">{specimenB.anatomy.layer_3_elemental_core.primary_organ}</span>
                 </div>
-                <div className="p-2 rounded bg-black/10 border border-current/10">
+                <div className="p-2 rounded bg-black/10 border border-current/10 min-w-0">
                   <span className="text-[10px] opacity-60 block">DESCRIPTION</span>
-                  <p className="text-[11px] opacity-80">{specimenB.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
+                  <p className="text-[11px] opacity-80 break-words">{specimenB.anatomy.layer_3_elemental_core.primary_organ_desc}</p>
                 </div>
               </div>
             )}
 
             {activeLayer === 4 && (
-              <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1">
-                <div className="flex justify-between items-center text-[10px] opacity-75">
-                  <span>TECTONIC ERA:</span>
-                  <span className="font-bold">{specimenB.anatomy.layer_4_geologic_speciation.time_era}</span>
+              <div className="p-2 rounded bg-black/10 border border-current/10 space-y-1 min-w-0">
+                <div className="flex justify-between items-center text-[10px] opacity-75 gap-2">
+                  <span className="flex-shrink-0">TECTONIC ERA:</span>
+                  <span className="font-bold truncate">{specimenB.anatomy.layer_4_geologic_speciation.time_era}</span>
                 </div>
-                <p className="text-[11px] opacity-80">{specimenB.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
+                <p className="text-[11px] opacity-80 break-words">{specimenB.anatomy.layer_4_geologic_speciation.speciation_notes}</p>
               </div>
             )}
           </div>
 
           <button
             onClick={() => onOpenModal(specimenB)}
-            className="mt-4 w-full py-1.5 text-xs font-mono uppercase tracking-wider rounded border border-current/30 hover:bg-current/10 transition-colors"
+            className="mt-4 w-full py-1.5 text-xs font-mono uppercase tracking-wider rounded border border-current/30 hover:bg-current/10 transition-colors cursor-pointer"
           >
             Open Full Specimen Dossier
           </button>
@@ -405,39 +405,51 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
       </div>
 
       {/* Comparative Delta Balance Gauge */}
-      <div className={`mt-6 p-4 rounded-xl ${style.card} border border-current/20 font-mono text-xs`}>
+      <div className={`mt-6 p-4 rounded-xl ${style.card} border border-current/20 font-mono text-xs min-w-0`}>
         <div className="flex items-center justify-between mb-2">
           <span className="font-bold uppercase tracking-wider opacity-80">
             Divergent Morphological Delta
           </span>
           <span className="text-[10px] opacity-60">DIAGNOSTIC DELTA SUMMARY</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">
-          <div className="p-2.5 rounded bg-black/10 border border-current/10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center min-w-0">
+          <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
             <span className="text-[10px] opacity-60 block">BONE DENSITY DELTA</span>
-            <span className="font-bold text-base">
+            <span className="font-bold text-base truncate block">
               {Number(boneDensityDiff) > 0 ? `+${boneDensityDiff}` : boneDensityDiff} pts
             </span>
-            <span className="text-[9px] opacity-60 block mt-0.5">
-              {Number(boneDensityDiff) > 0 ? `${specimenA.name} is denser` : `${specimenB.name} is denser`}
+            <span className="text-[9px] opacity-60 block mt-0.5 break-words">
+              {Number(boneDensityDiff) > 0
+                ? `${specimenA.name} is denser`
+                : Number(boneDensityDiff) < 0
+                ? `${specimenB.name} is denser`
+                : 'Identical bone density'}
             </span>
           </div>
-          <div className="p-2.5 rounded bg-black/10 border border-current/10">
+          <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
             <span className="text-[10px] opacity-60 block">STATURE VARIANCE</span>
-            <span className="font-bold text-base">
+            <span className="font-bold text-base truncate block">
               {Number(heightDiff) > 0 ? `+${heightDiff}` : heightDiff} m
             </span>
-            <span className="text-[9px] opacity-60 block mt-0.5">
-              {Number(heightDiff) > 0 ? `${specimenA.name} is taller` : `${specimenB.name} is taller`}
+            <span className="text-[9px] opacity-60 block mt-0.5 break-words">
+              {Number(heightDiff) > 0
+                ? `${specimenA.name} is taller`
+                : Number(heightDiff) < 0
+                ? `${specimenB.name} is taller`
+                : 'Equivalent stature'}
             </span>
           </div>
-          <div className="p-2.5 rounded bg-black/10 border border-current/10">
+          <div className="p-2.5 rounded bg-black/10 border border-current/10 min-w-0">
             <span className="text-[10px] opacity-60 block">MASS DISPARITY</span>
-            <span className="font-bold text-base">
+            <span className="font-bold text-base truncate block">
               {Number(weightDiff) > 0 ? `+${weightDiff}` : weightDiff} kg
             </span>
-            <span className="text-[9px] opacity-60 block mt-0.5">
-              {Number(weightDiff) > 0 ? `${specimenA.name} is heavier` : `${specimenB.name} is heavier`}
+            <span className="text-[9px] opacity-60 block mt-0.5 break-words">
+              {Number(weightDiff) > 0
+                ? `${specimenA.name} is heavier`
+                : Number(weightDiff) < 0
+                ? `${specimenB.name} is heavier`
+                : 'Equal body mass'}
             </span>
           </div>
         </div>

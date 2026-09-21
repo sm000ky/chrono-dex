@@ -122,14 +122,14 @@ export const PhylogenyTree: React.FC<PhylogenyTreeProps> = ({
 
         {/* Selected Clade Showcase Stage */}
         <div className="p-6 rounded-xl border-2 border-current/20 bg-black/10 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-current/15 pb-3">
-            <div>
-              <span className="text-[10px] uppercase font-bold text-amber-500">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-current/15 pb-3 min-w-0">
+            <div className="min-w-0 flex-1">
+              <span className="text-[10px] uppercase font-bold text-amber-500 truncate block">
                 PHYLOGENETIC BRANCH: {activeClade.latinClass}
               </span>
-              <h3 className="text-xl font-serif font-bold">{activeClade.name}</h3>
+              <h3 className="text-xl font-serif font-bold break-words">{activeClade.name}</h3>
             </div>
-            <div className="px-3 py-1 rounded bg-black/30 border border-current/20 text-xs font-bold font-mono">
+            <div className="px-3 py-1 rounded bg-black/30 border border-current/20 text-xs font-bold font-mono flex-shrink-0">
               ERA OF ORIGIN: {activeClade.ancestorEpoch}
             </div>
           </div>

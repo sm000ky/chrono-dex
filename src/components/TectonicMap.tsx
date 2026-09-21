@@ -235,9 +235,9 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
         {/* Selected Plate Telemetry Dossier */}
         {selectedPlate && (
           <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-1.5 animate-in fade-in min-w-0">
-            <div className="flex items-center justify-between text-xs font-bold" style={{ color: activeEpoch.accentHex }}>
-              <span className="truncate">SELECTED TECTONIC CRATON: {selectedPlate}</span>
-              <button onClick={() => setSelectedPlate(null)} className="cursor-pointer text-xs opacity-70 hover:opacity-100">
+            <div className="flex items-center justify-between text-xs font-bold gap-2 min-w-0" style={{ color: activeEpoch.accentHex }}>
+              <span className="truncate min-w-0 flex-1">CRATON: {selectedPlate}</span>
+              <button onClick={() => setSelectedPlate(null)} className="cursor-pointer text-xs opacity-70 hover:opacity-100 flex-shrink-0 px-2 py-0.5 rounded border border-current/30">
                 Close [×]
               </button>
             </div>
