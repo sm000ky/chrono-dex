@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PokemonChronoEntry, EpochId, Language } from '../types';
 import { Translations } from '../lib/i18n';
+import { isShinyLocked } from '../lib/pokemonLocalizer';
 import { chronoAudio } from '../lib/audioEngine';
 import {
   Layers,
@@ -61,15 +62,18 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
   const [isShiny, setIsShiny] = useState<boolean>(false);
 
   const specimen = pokemonList.find((p) => p.id === selectedId) || pokemonList[0];
+  const isLocked = isShinyLocked(specimen.national_id);
+  const activeShiny = isShiny && !isLocked;
 
-  const artworkSrc = isShiny
+  const artworkSrc = activeShiny
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimen.id}.png`
     : specimen.sprites.artwork;
-  const iconFallbackSrc = isShiny
+  const iconFallbackSrc = activeShiny
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimen.id}.png`
     : specimen.sprites.icon;
 
   const handleToggleShiny = () => {
+    if (isLocked) return;
     chronoAudio.playShinySparkle();
     setIsShiny((prev) => !prev);
   };
@@ -83,6 +87,9 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
     setFossilExcavatedPercent(0);
     setActiveHotspot(null);
     setDiagnosticMode('standard');
+    if (isShinyLocked(id)) {
+      setIsShiny(false);
+    }
   };
 
   const handleLayerChange = (layer: number) => {
@@ -209,8 +216,8 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
 
             {/* Specimen Visual Stage */}
             <div className="relative z-10 w-full max-w-xs aspect-square flex items-center justify-center my-3">
-              {/* Shiny Chromatic Badge inside Chamber */}
-              {isShiny && (
+              {/* Shiny Chromatic Badge inside Chamber: only if activeShiny */}
+              {activeShiny && (
                 <div className="absolute top-0 right-0 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400 text-amber-300 font-mono text-[9px] font-bold tracking-widest uppercase shadow-[0_0_12px_rgba(245,158,11,0.3)] flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-amber-300" />
                   <span>{t.shinyActive}</span>
@@ -384,20 +391,22 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                 <span>{isStimulated ? t.btnStimulateDischarging : t.btnStimulateNormal}</span>
               </button>
 
-              {/* Shiny Morph Toggle Button */}
-              <button
-                type="button"
-                onClick={handleToggleShiny}
-                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
-                  isShiny
-                    ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
-                    : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
-                }`}
-                title={t.shinyTooltip}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{isShiny ? t.shinyActive : t.shinyNormal}</span>
-              </button>
+              {/* Shiny Morph Toggle Button: Only available if NOT officially shiny-locked */}
+              {!isLocked && (
+                <button
+                  type="button"
+                  onClick={handleToggleShiny}
+                  className={`px-3 py-1.5 rounded-lg border font-bold flex items-center gap-1.5 cursor-pointer transition-all ${
+                    activeShiny
+                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
+                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                  }`}
+                  title={t.shinyTooltip}
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>{activeShiny ? t.shinyActive : t.shinyNormal}</span>
+                </button>
+              )}
 
               {/* Fossil Excavation Tool Button */}
               <button

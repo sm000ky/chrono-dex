@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PokemonChronoEntry, EpochId } from '../types';
 import { Translations } from '../lib/i18n';
+import { isShinyLocked } from '../lib/pokemonLocalizer';
 import { chronoAudio } from '../lib/audioEngine';
 import {
   X,
@@ -59,6 +60,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   };
 
   const handleToggleShiny = () => {
+    if (pokemon && isShinyLocked(pokemon.national_id)) return;
     chronoAudio.playShinySparkle();
     setIsShiny((prev) => !prev);
   };
@@ -69,6 +71,9 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
       setPeelOpacity(100);
       setActiveHotspot(null);
       chronoAudio.playLayerPeel(1);
+      if (isShinyLocked(pokemon.national_id)) {
+        setIsShiny(false);
+      }
     }
   }, [pokemon]);
 
@@ -84,10 +89,13 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
 
   if (!pokemon) return null;
 
-  const artworkSrc = isShiny
+  const locked = isShinyLocked(pokemon.national_id);
+  const activeShiny = isShiny && !locked;
+
+  const artworkSrc = activeShiny
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${pokemon.id}.png`
     : pokemon.sprites.artwork;
-  const iconFallbackSrc = isShiny
+  const iconFallbackSrc = activeShiny
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokemon.id}.png`
     : pokemon.sprites.icon;
 
@@ -200,20 +208,22 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
               <span className={`text-xs font-bold ${style.accentText} truncate`}>
                 {pokemon.epoch.time_label}
               </span>
-              {/* Shiny Toggle Button */}
-              <button
-                type="button"
-                onClick={handleToggleShiny}
-                className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-bold font-mono tracking-wider transition-all cursor-pointer ${
-                  isShiny
-                    ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
-                    : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
-                }`}
-                title={t.shinyTooltip}
-              >
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>{isShiny ? t.shinyActive : t.shinyNormal}</span>
-              </button>
+              {/* Shiny Toggle Button: Only available if NOT officially shiny-locked */}
+              {!locked && (
+                <button
+                  type="button"
+                  onClick={handleToggleShiny}
+                  className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-bold font-mono tracking-wider transition-all cursor-pointer ${
+                    activeShiny
+                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.6)] font-extrabold scale-105'
+                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                  }`}
+                  title={t.shinyTooltip}
+                >
+                  <Sparkles className="w-3 h-3 text-amber-400" />
+                  <span>{activeShiny ? t.shinyActive : t.shinyNormal}</span>
+                </button>
+              )}
             </div>
 
             <h2 className={`text-xl sm:text-3xl font-bold tracking-tight break-words ${style.titleFont}`}>
@@ -296,7 +306,7 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
             {/* Visual Specimen with Interactive Layers */}
             <div className="relative z-10 w-full max-w-sm aspect-square flex items-center justify-center my-2">
               {/* Shiny Chromatic Badge inside Chamber */}
-              {isShiny && (
+              {activeShiny && (
                 <div className="absolute top-0 right-0 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400 text-amber-300 font-mono text-[9px] font-bold tracking-widest uppercase shadow-[0_0_12px_rgba(245,158,11,0.3)] flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-amber-300" />
                   <span>{t.shinyActive}</span>

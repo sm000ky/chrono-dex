@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PokemonChronoEntry, EpochId, Language } from '../types';
 import { Translations } from '../lib/i18n';
+import { isShinyLocked } from '../lib/pokemonLocalizer';
 import { chronoAudio } from '../lib/audioEngine';
 import {
   Layers,
@@ -43,26 +44,33 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
   const specimenA = pokemonList.find((p) => p.national_id === specimenAId) || pokemonList[0];
   const specimenB = pokemonList.find((p) => p.national_id === specimenBId) || pokemonList[1];
 
-  const artworkSrcA = isShinyA
+  const isLockedA = isShinyLocked(specimenA.national_id);
+  const activeShinyA = isShinyA && !isLockedA;
+  const isLockedB = isShinyLocked(specimenB.national_id);
+  const activeShinyB = isShinyB && !isLockedB;
+
+  const artworkSrcA = activeShinyA
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimenA.id}.png`
     : specimenA.sprites.artwork;
-  const iconFallbackA = isShinyA
+  const iconFallbackA = activeShinyA
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimenA.id}.png`
     : specimenA.sprites.icon;
 
-  const artworkSrcB = isShinyB
+  const artworkSrcB = activeShinyB
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/${specimenB.id}.png`
     : specimenB.sprites.artwork;
-  const iconFallbackB = isShinyB
+  const iconFallbackB = activeShinyB
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${specimenB.id}.png`
     : specimenB.sprites.icon;
 
   const handleToggleShinyA = () => {
+    if (isLockedA) return;
     chronoAudio.playShinySparkle();
     setIsShinyA((prev) => !prev);
   };
 
   const handleToggleShinyB = () => {
+    if (isLockedB) return;
     chronoAudio.playShinySparkle();
     setIsShinyB((prev) => !prev);
   };
@@ -237,19 +245,21 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     </option>
                   ))}
                 </select>
-                <button
-                  type="button"
-                  onClick={handleToggleShinyA}
-                  className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
-                    isShinyA
-                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
-                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
-                  }`}
-                  title={t.shinyTooltip}
-                >
-                  <Sparkles className="w-2.5 h-2.5" />
-                  <span>{isShinyA ? '★ SHINY' : 'SHINY'}</span>
-                </button>
+                {!isLockedA && (
+                  <button
+                    type="button"
+                    onClick={handleToggleShinyA}
+                    className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                      activeShinyA
+                        ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
+                        : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                    }`}
+                    title={t.shinyTooltip}
+                  >
+                    <Sparkles className="w-2.5 h-2.5" />
+                    <span>{activeShinyA ? '★ SHINY' : 'SHINY'}</span>
+                  </button>
+                )}
               </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenA.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenA.binomial_name}</p>
@@ -390,19 +400,21 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
                     </option>
                   ))}
                 </select>
-                <button
-                  type="button"
-                  onClick={handleToggleShinyB}
-                  className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
-                    isShinyB
-                      ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
-                      : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
-                  }`}
-                  title={t.shinyTooltip}
-                >
-                  <Sparkles className="w-2.5 h-2.5" />
-                  <span>{isShinyB ? '★ SHINY' : 'SHINY'}</span>
-                </button>
+                {!isLockedB && (
+                  <button
+                    type="button"
+                    onClick={handleToggleShinyB}
+                    className={`px-2 py-0.5 rounded-full border text-[9px] font-mono font-bold flex items-center gap-1 cursor-pointer transition-all ${
+                      activeShinyB
+                        ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)] font-extrabold'
+                        : 'bg-black/30 hover:bg-black/50 border-current/30 text-amber-300'
+                    }`}
+                    title={t.shinyTooltip}
+                  >
+                    <Sparkles className="w-2.5 h-2.5" />
+                    <span>{activeShinyB ? '★ SHINY' : 'SHINY'}</span>
+                  </button>
+                )}
               </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenB.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenB.binomial_name}</p>

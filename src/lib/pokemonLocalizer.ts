@@ -1,6 +1,40 @@
 import { PokemonChronoEntry, Language } from '../types';
 
 // ===================================================================
+// OFFICIAL SHINY-LOCKED SPECIES REGISTRY
+// Species that have never been legally available as Shiny in official games
+// ===================================================================
+export const SHINY_LOCKED_IDS = new Set<number>([
+  494,  // Victini
+  720,  // Hoopa
+  721,  // Volcanion
+  789,  // Cosmog
+  790,  // Cosmoem
+  801,  // Magearna
+  802,  // Marshadow
+  891,  // Kubfu
+  892,  // Urshifu
+  893,  // Zarude
+  896,  // Glastrier
+  897,  // Spectrier
+  898,  // Calyrex
+  1009, // Walking Wake
+  1010, // Iron Leaves
+  1014, // Okidogi
+  1015, // Munkidori
+  1016, // Fezandipiti
+  1017, // Ogerpon
+  1020, // Gouging Fire
+  1021, // Raging Bolt
+  1022, // Iron Boulder
+  1023, // Iron Crown
+  1024, // Terapagos
+  1025  // Pecharunt
+]);
+
+export const isShinyLocked = (nationalId: number): boolean => SHINY_LOCKED_IDS.has(nationalId);
+
+// ===================================================================
 // TYPE TRANSLATIONS
 // ===================================================================
 export const TYPE_TRANSLATIONS: Record<Language, Record<string, string>> = {
