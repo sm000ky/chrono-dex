@@ -83,6 +83,7 @@ class ChronoAudioEngine {
    */
   public switchEpochAmbient(epochNumber: number): void {
     this.currentEpoch = epochNumber;
+    this.init();
     this.playEpochTransition(epochNumber);
     if (!this.isMuted && this.ctx) {
       this.startEpochAmbient(epochNumber);
@@ -259,7 +260,9 @@ class ChronoAudioEngine {
    * Sound effect when transitioning epochs
    */
   public playEpochTransition(epochNumber: number): void {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
     try {
       if (this.ctx.state === 'suspended') this.ctx.resume();
       switch (epochNumber) {
@@ -276,7 +279,9 @@ class ChronoAudioEngine {
   }
 
   public playLayerPeel(layerIndex: number): void {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
     try {
       if (this.ctx.state === 'suspended') this.ctx.resume();
       const t = this.ctx.currentTime;
@@ -423,7 +428,9 @@ class ChronoAudioEngine {
    * Deep pulsing bio-resonance surge when stimulating specimen elemental organ
    */
   public playBioResonance(type = 'normal'): void {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
     try {
       if (this.ctx.state === 'suspended') this.ctx.resume();
       const t = this.ctx.currentTime;
@@ -480,7 +487,9 @@ class ChronoAudioEngine {
    * Tactile fossil chisel scrape / dusting sound
    */
   public playFossilChisel(): void {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
     try {
       if (this.ctx.state === 'suspended') this.ctx.resume();
       const t = this.ctx.currentTime;
@@ -536,7 +545,9 @@ class ChronoAudioEngine {
    * Harmonious discovery chord when fossil excavation reaches 100%
    */
   public playExcavationComplete(): void {
-    if (!this.ctx || !this.masterGain || this.isMuted) return;
+    if (this.isMuted) return;
+    this.init();
+    if (!this.ctx || !this.masterGain) return;
     try {
       if (this.ctx.state === 'suspended') this.ctx.resume();
       const t = this.ctx.currentTime;

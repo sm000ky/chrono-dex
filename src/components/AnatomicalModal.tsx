@@ -13,7 +13,9 @@ import {
   Flame,
   Info,
   Sliders,
-  Crosshair
+  Crosshair,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 interface AnatomicalModalProps {
@@ -21,6 +23,8 @@ interface AnatomicalModalProps {
   onClose: () => void;
   t: Translations;
   activeEpochId: EpochId;
+  onNavigatePokemon?: (pokemon: PokemonChronoEntry) => void;
+  pokemonList?: PokemonChronoEntry[];
 }
 
 export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
@@ -28,10 +32,30 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   onClose,
   t,
   activeEpochId,
+  onNavigatePokemon,
+  pokemonList,
 }) => {
   const [activeLayer, setActiveLayer] = useState<number>(1);
   const [peelOpacity, setPeelOpacity] = useState<number>(100); // 0 = Skeleton/Core, 100 = Dermis
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+
+  const currentIndex = pokemon && pokemonList ? pokemonList.findIndex((p) => p.id === pokemon.id) : -1;
+  const prevPokemon = currentIndex > 0 && pokemonList ? pokemonList[currentIndex - 1] : null;
+  const nextPokemon = currentIndex >= 0 && pokemonList && currentIndex < pokemonList.length - 1 ? pokemonList[currentIndex + 1] : null;
+
+  const handlePrev = () => {
+    if (prevPokemon && onNavigatePokemon) {
+      chronoAudio.playLayerPeel(1);
+      onNavigatePokemon(prevPokemon);
+    }
+  };
+
+  const handleNext = () => {
+    if (nextPokemon && onNavigatePokemon) {
+      chronoAudio.playLayerPeel(1);
+      onNavigatePokemon(nextPokemon);
+    }
+  };
 
   useEffect(() => {
     if (pokemon) {
@@ -45,10 +69,12 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft' && prevPokemon) handlePrev();
+      if (e.key === 'ArrowRight' && nextPokemon) handleNext();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, prevPokemon, nextPokemon]);
 
   if (!pokemon) return null;
 
@@ -172,13 +198,37 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-2.5 rounded-lg border-2 border-current hover:bg-black/20 transition-all cursor-pointer flex-shrink-0"
-            title={t.close}
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Quick Species Prev / Next & Close */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {onNavigatePokemon && pokemonList && (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handlePrev}
+                  disabled={!prevPokemon}
+                  className="p-2 rounded-lg border-2 border-current hover:bg-black/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  title={prevPokemon ? `Previous: #${prevPokemon.national_id} ${prevPokemon.name}` : 'No previous specimen'}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!nextPokemon}
+                  className="p-2 rounded-lg border-2 border-current hover:bg-black/20 disabled:opacity-25 disabled:cursor-not-allowed transition-all cursor-pointer"
+                  title={nextPokemon ? `Next: #${nextPokemon.national_id} ${nextPokemon.name}` : 'No next specimen'}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            <button
+              onClick={onClose}
+              className="p-2.5 rounded-lg border-2 border-current hover:bg-black/20 transition-all cursor-pointer flex-shrink-0"
+              title={t.close}
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Tactile Layer Selection Ribbon */}

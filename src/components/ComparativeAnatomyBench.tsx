@@ -185,8 +185,25 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
         {/* Specimen A Card */}
         <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between min-w-0`}>
           <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
-            <div className="min-w-0 flex-1">
-              <span className="text-[10px] font-mono opacity-60">SPECIMEN ALPHA [A]</span>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-mono opacity-60">SPECIMEN ALPHA [A]</span>
+                <select
+                  value={specimenAId}
+                  onChange={(e) => {
+                    chronoAudio.playLayerPeel(1);
+                    setSpecimenAId(Number(e.target.value));
+                  }}
+                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
+                  title="Switch Specimen Alpha from Archive"
+                >
+                  {pokemonList.map((p) => (
+                    <option key={p.national_id} value={p.national_id} className="bg-[#1a1a1a] text-white">
+                      #{String(p.national_id).padStart(4, '0')} · {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenA.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenA.binomial_name}</p>
             </div>
@@ -301,8 +318,25 @@ export const ComparativeAnatomyBench: React.FC<ComparativeAnatomyBenchProps> = (
         {/* Specimen B Card */}
         <div className={`p-4 sm:p-6 rounded-xl ${style.card} relative flex flex-col justify-between min-w-0`}>
           <div className="flex items-start justify-between border-b border-current/15 pb-3 mb-4 gap-2 min-w-0">
-            <div className="min-w-0 flex-1">
-              <span className="text-[10px] font-mono opacity-60">SPECIMEN BETA [B]</span>
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[10px] font-mono opacity-60">SPECIMEN BETA [B]</span>
+                <select
+                  value={specimenBId}
+                  onChange={(e) => {
+                    chronoAudio.playLayerPeel(1);
+                    setSpecimenBId(Number(e.target.value));
+                  }}
+                  className="text-[10px] font-mono bg-black/40 border border-current/30 rounded px-2 py-0.5 outline-none text-current cursor-pointer max-w-[200px] truncate"
+                  title="Switch Specimen Beta from Archive"
+                >
+                  {pokemonList.map((p) => (
+                    <option key={p.national_id} value={p.national_id} className="bg-[#1a1a1a] text-white">
+                      #{String(p.national_id).padStart(4, '0')} · {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <h3 className="text-lg sm:text-xl font-bold truncate">{specimenB.name}</h3>
               <p className="text-xs italic opacity-80 break-words">{specimenB.binomial_name}</p>
             </div>

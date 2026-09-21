@@ -233,19 +233,106 @@ export const TectonicMap: React.FC<TectonicMapProps> = ({
         </div>
 
         {/* Selected Plate Telemetry Dossier */}
-        {selectedPlate && (
-          <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-1.5 animate-in fade-in min-w-0">
-            <div className="flex items-center justify-between text-xs font-bold gap-2 min-w-0" style={{ color: activeEpoch.accentHex }}>
-              <span className="truncate min-w-0 flex-1">CRATON: {selectedPlate}</span>
-              <button onClick={() => setSelectedPlate(null)} className="cursor-pointer text-xs opacity-70 hover:opacity-100 flex-shrink-0 px-2 py-0.5 rounded border border-current/30">
-                Close [×]
-              </button>
+        {selectedPlate && (() => {
+          const PLATE_INFO: Record<string, { types: string[]; desc: string }> = {
+            'Poké-Pangea Supercontinent': {
+              types: ['Ground', 'Fire', 'Rock'],
+              desc: 'Unified primordial supercontinent subjected to extreme magma convection and crustal volcanism. Endemic cradle of colossal reptilian and rock-burrowing lineages.',
+            },
+            'Kanto-Johto Northern Plate': {
+              types: ['Grass', 'Poison', 'Normal'],
+              desc: 'Temperate alluvial basin rich in primeval ancient forests and riparian marshes. Catalyzed specialized botanical vascular networks and acidic venom enzymes.',
+            },
+            'Sinnoh-Hoenn Southern Arc': {
+              types: ['Water', 'Dragon', 'Steel'],
+              desc: 'Oceanic spreading trench and island arc where deep-sea hydrostatic pressure stimulated hydro-osmotic organ chambers and heavy mineralized bone density.',
+            },
+            'Hisui Continental Plate': {
+              types: ['Ghost', 'Fighting', 'Ice'],
+              desc: 'Glacial orogeny driven by Mount Coronet tectonic uplift. Geothermal rifting through sub-zero snowfields yielded dense insulating fur and spiritual auric nodes.',
+            },
+            'Kanto-Johto Unified Plate': {
+              types: ['Electric', 'Psychic', 'Flying'],
+              desc: 'Stabilized modern continental crust with rich piezoelectric ore veins and high tropospheric jet streams.',
+            },
+            'Hoenn Volcanic Subplate': {
+              types: ['Fire', 'Water', 'Ground'],
+              desc: 'Subduction volcanic zone marked by Mount Chimney caldera activity and surrounding coral atolls.',
+            },
+            'Sinnoh Northern Shield': {
+              types: ['Ice', 'Steel', 'Rock'],
+              desc: 'Precambrian granite shield capped by perpetual permafrost and subterranean metallic ore corridors.',
+            },
+            'Kalos Continental Shelf': {
+              types: ['Fairy', 'Dragon', 'Psychic'],
+              desc: 'Limestone karst plateau with subterranean mineral springs emitting radiant bio-luminescent frequencies.',
+            },
+            'Paldean Iberian Plate': {
+              types: ['Fighting', 'Bug', 'Electric'],
+              desc: 'Meseta plateau encircling the Great Crater, characterized by high-salinity rock cliffs and conductive crystalline sediment.',
+            },
+            'Area Zero Temporal Vortex': {
+              types: ['Dragon', 'Electric', 'Fighting'],
+              desc: 'Non-Euclidean gravitational and temporal singularity where primordial paradox beasts and future metallic units converge.',
+            },
+          };
+
+          const plateData = PLATE_INFO[selectedPlate] || {
+            types: ['Normal'],
+            desc: 'Geological stress along this craton fostered endemic speciation. Tectonic isolation separated gene pools, catalyzing specialized elemental organs.',
+          };
+
+          return (
+            <div className="mt-4 p-4 rounded-xl border-2 border-current/25 bg-black/20 space-y-2.5 animate-in fade-in min-w-0">
+              <div className="flex items-center justify-between text-xs font-bold gap-2 min-w-0" style={{ color: activeEpoch.accentHex }}>
+                <span className="truncate min-w-0 flex-1">CRATON TELEMETRY: {selectedPlate}</span>
+                <button
+                  onClick={() => setSelectedPlate(null)}
+                  className="cursor-pointer text-xs opacity-70 hover:opacity-100 flex-shrink-0 px-2 py-0.5 rounded border border-current/30"
+                >
+                  Close [×]
+                </button>
+              </div>
+
+              <p className="font-serif text-xs sm:text-sm italic leading-relaxed break-words">
+                "{plateData.desc}"
+              </p>
+
+              {/* Endemic Elemental Conduit Filters */}
+              <div className="pt-2 border-t border-current/15 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] uppercase font-bold opacity-75 font-mono">Endemic Fauna Conduits:</span>
+                  {plateData.types.map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => {
+                        chronoAudio.playLayerPeel(1);
+                        if (onFilterType) onFilterType(type);
+                      }}
+                      className="px-2 py-0.5 rounded text-[10px] font-bold font-mono border border-current/30 hover:bg-current/20 cursor-pointer transition-all uppercase"
+                      style={{ color: activeEpoch.accentHex }}
+                      title={`Filter ${type} specimens from this plate in archive`}
+                    >
+                      {type} →
+                    </button>
+                  ))}
+                </div>
+
+                {onFilterType && (
+                  <button
+                    onClick={() => {
+                      chronoAudio.playLayerPeel(2);
+                      onFilterType(plateData.types[0]);
+                    }}
+                    className="px-2.5 py-1 rounded text-[10px] font-bold font-mono bg-amber-500 text-black border border-amber-400 hover:bg-amber-400 cursor-pointer transition-all"
+                  >
+                    View Fauna in Archive →
+                  </button>
+                )}
+              </div>
             </div>
-            <p className="font-serif text-xs sm:text-sm italic leading-relaxed break-words">
-              Geological stress along this craton fostered endemic speciation. Tectonic isolation separated gene pools, catalyzing specialized elemental organs adapted to extreme magma, glacial orogeny, or deep hydrothermal oceanic vents.
-            </p>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

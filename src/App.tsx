@@ -536,6 +536,8 @@ export function App() {
       <AnatomicalModal
         pokemon={selectedPokemon}
         onClose={() => setSelectedPokemon(null)}
+        onNavigatePokemon={setSelectedPokemon}
+        pokemonList={pokemonList}
         t={t}
         activeEpochId={activeEpoch.id}
       />

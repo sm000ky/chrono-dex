@@ -237,6 +237,13 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                   >
                     2
                   </button>
+                  <button
+                    onClick={() => setActiveHotspot('appendage')}
+                    className="absolute bottom-[24%] right-[32%] w-6 h-6 rounded-full bg-amber-500 text-black border-2 border-amber-300 font-bold text-[10px] flex items-center justify-center cursor-pointer shadow-lg z-20 hover:scale-110"
+                    title="Peripheral Locomotive Conductor"
+                  >
+                    3
+                  </button>
                 </>
               )}
 
@@ -437,6 +444,7 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                   <span className="break-words">
                     {activeHotspot === 'cranial' && `[PIN 1: Cranial Bio-Capacitor] Neural node regulating ${specimen.types[0]} bio-synthesis.`}
                     {activeHotspot === 'elemental' && `[PIN 2: ${specimen.anatomy.layer_3_elemental_core.primary_organ}] ${specimen.anatomy.layer_3_elemental_core.primary_organ_desc}`}
+                    {activeHotspot === 'appendage' && `[PIN 3: Peripheral Conductor] Musculoskeletal kinetic conduits discharging elemental torque.`}
                   </span>
                 </div>
                 <button onClick={() => setActiveHotspot(null)} className="opacity-70 hover:opacity-100 flex-shrink-0">
