@@ -143,6 +143,11 @@ export interface Translations {
   layer2Name: string;
   layer3Name: string;
   layer4Name: string;
+  layer1Short: string;
+  layer2Short: string;
+  layer3Short: string;
+  layer4Short: string;
+  elementalReactor: string;
   viewingLayerLabel: string;
   layerXof4: string;
   timeEpochLabel: string;
@@ -300,6 +305,11 @@ export const DICTIONARY: Record<Language, Translations> = {
     layer2Name: 'II. Osteology & Skeleton',
     layer3Name: 'III. Elemental Core',
     layer4Name: 'IV. Tectonic Speciation',
+    layer1Short: 'I. Dermis',
+    layer2Short: 'II. Osteology',
+    layer3Short: 'III. Organ Core',
+    layer4Short: 'IV. Tectonics',
+    elementalReactor: 'BIO-REACTOR',
     viewingLayerLabel: 'VIEWING LAYER',
     layerXof4: 'LAYER {layer} OF 4',
     timeEpochLabel: 'TIME EPOCH',
@@ -456,6 +466,11 @@ export const DICTIONARY: Record<Language, Translations> = {
     layer2Name: 'II. Osteologi & Rangka Tulang',
     layer3Name: 'III. Inti Biokimia Elemen',
     layer4Name: 'IV. Spesiasi Tektonik Benua',
+    layer1Short: 'I. Dermis',
+    layer2Short: 'II. Osteologi',
+    layer3Short: 'III. Inti Elemen',
+    layer4Short: 'IV. Tektonik',
+    elementalReactor: 'REAKTOR ELEMEN',
     viewingLayerLabel: 'LAPISAN AKTIF',
     layerXof4: 'LAPISAN {layer} DARI 4',
     timeEpochLabel: 'ZAMAN GEOLOGIS',
@@ -612,6 +627,11 @@ export const DICTIONARY: Record<Language, Translations> = {
     layer2Name: '第II層：骨格・骨密度',
     layer3Name: '第III層：生化学的属性器官',
     layer4Name: '第IV層：地殻移動・種分化の記録',
+    layer1Short: '第I層：外皮',
+    layer2Short: '第II層：骨格',
+    layer3Short: '第III層：属性炉',
+    layer4Short: '第IV層：地殻',
+    elementalReactor: '生体属性エネルギー器官',
     viewingLayerLabel: '観察中の層',
     layerXof4: '第{layer}層 / 全4層',
     timeEpochLabel: '地質時代',

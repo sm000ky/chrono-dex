@@ -232,23 +232,24 @@ export const AnatomicalModal: React.FC<AnatomicalModalProps> = ({
         </div>
 
         {/* Tactile Layer Selection Ribbon */}
-        <div className="px-4 py-2.5 border-b border-current/20 bg-black/10 flex items-center justify-between gap-2 overflow-x-auto">
+        <div className="px-3 sm:px-4 py-2 border-b border-current/20 bg-black/10 flex items-center justify-between gap-2 overflow-x-auto">
           <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider flex-shrink-0">
             <Layers className="w-4 h-4" />
-            <span className="hidden sm:inline">ANATOMICAL SLICES:</span>
+            <span className="hidden sm:inline">{t.viewingLayerLabel}:</span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {[
-              { num: 1, label: t.layer1Name },
-              { num: 2, label: t.layer2Name },
-              { num: 3, label: t.layer3Name },
-              { num: 4, label: t.layer4Name },
+              { num: 1, label: t.layer1Short, full: t.layer1Name },
+              { num: 2, label: t.layer2Short, full: t.layer2Name },
+              { num: 3, label: t.layer3Short, full: t.layer3Name },
+              { num: 4, label: t.layer4Short, full: t.layer4Name },
             ].map((layer) => (
               <button
                 key={layer.num}
                 onClick={() => handleLayerChange(layer.num)}
-                className={`px-3 py-1.5 rounded-md text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                title={layer.full}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   activeLayer === layer.num ? style.tabActive : style.tabInactive
                 }`}
               >

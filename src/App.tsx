@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import pokemonData from './data/chrono_pokemon.json';
 import { PokemonChronoEntry, Language } from './types';
 import { DICTIONARY, getLocalizedEpochs } from './lib/i18n';
+import { localizePokemon } from './lib/pokemonLocalizer';
 import { chronoAudio } from './lib/audioEngine';
 import { TectonicSlider } from './components/TectonicSlider';
 import { TectonicMap } from './components/TectonicMap';
@@ -76,7 +77,12 @@ export function App() {
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonChronoEntry | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(true);
 
-  const pokemonList = pokemonData as unknown as PokemonChronoEntry[];
+  // 100% Dynamically localized Pokemon records
+  const rawPokemonList = pokemonData as unknown as PokemonChronoEntry[];
+  const pokemonList = useMemo(
+    () => rawPokemonList.map((p) => localizePokemon(p, currentLang)),
+    [rawPokemonList, currentLang]
+  );
 
   // Change active epoch and switch ambient soundscape simultaneously
   const handleSelectEpoch = (newIdx: number) => {
@@ -247,62 +253,62 @@ export function App() {
         <div className="p-1.5 rounded-2xl border-2 border-current/25 bg-black/15 backdrop-blur-md grid grid-cols-2 sm:grid-cols-5 gap-1.5 text-xs font-bold">
           <button
             onClick={() => handleSelectTab('dissection')}
-            className={`py-3 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer min-w-0 text-center ${
               viewMode === 'dissection'
                 ? 'bg-amber-500 text-black border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] font-extrabold scale-[1.02]'
                 : 'hover:bg-black/20 opacity-80'
             }`}
           >
             <Layers className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">{t.tabDissection}</span>
+            <span className="truncate max-w-full leading-tight">{t.tabDissection}</span>
           </button>
 
           <button
             onClick={() => handleSelectTab('comparative')}
-            className={`py-3 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer min-w-0 text-center ${
               viewMode === 'comparative'
                 ? 'bg-amber-500 text-black border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] font-extrabold scale-[1.02]'
                 : 'hover:bg-black/20 opacity-80'
             }`}
           >
             <Scale className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">{t.tabComparative}</span>
+            <span className="truncate max-w-full leading-tight">{t.tabComparative}</span>
           </button>
 
           <button
             onClick={() => handleSelectTab('atlas')}
-            className={`py-3 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer min-w-0 text-center ${
               viewMode === 'atlas'
                 ? 'bg-amber-500 text-black border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] font-extrabold scale-[1.02]'
                 : 'hover:bg-black/20 opacity-80'
             }`}
           >
             <Compass className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">{t.tabAtlas}</span>
+            <span className="truncate max-w-full leading-tight">{t.tabAtlas}</span>
           </button>
 
           <button
             onClick={() => handleSelectTab('phylogeny')}
-            className={`py-3 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer min-w-0 text-center ${
               viewMode === 'phylogeny'
                 ? 'bg-amber-500 text-black border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] font-extrabold scale-[1.02]'
                 : 'hover:bg-black/20 opacity-80'
             }`}
           >
             <Dna className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">{t.tabPhylogeny}</span>
+            <span className="truncate max-w-full leading-tight">{t.tabPhylogeny}</span>
           </button>
 
           <button
             onClick={() => handleSelectTab('specimens')}
-            className={`py-3 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer col-span-2 sm:col-span-1 ${
+            className={`py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer col-span-2 sm:col-span-1 min-w-0 text-center ${
               viewMode === 'specimens'
                 ? 'bg-amber-500 text-black border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] font-extrabold scale-[1.02]'
                 : 'hover:bg-black/20 opacity-80'
             }`}
           >
             <Archive className="w-4 h-4 flex-shrink-0" />
-            <span className="whitespace-nowrap">{t.tabArchives}</span>
+            <span className="truncate max-w-full leading-tight">{t.tabArchives}</span>
           </button>
         </div>
       </nav>

@@ -456,12 +456,12 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
             )}
 
             {/* Layer Selection Ribbon */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 min-w-0">
               {[
-                { num: 1, label: t.layer1Name.split('&')[0]?.replace(/^[IVX]+\.\s*/, '').trim() || 'Dermis', icon: Shield },
-                { num: 2, label: t.layer2Name.split('&')[0]?.replace(/^[IVX]+\.\s*/, '').trim() || 'Osteology', icon: Activity },
-                { num: 3, label: t.layer3Name.split('&')[0]?.replace(/^[IVX]+\.\s*/, '').trim() || 'Organ Core', icon: Zap },
-                { num: 4, label: t.layer4Name.split('&')[0]?.replace(/^[IVX]+\.\s*/, '').trim() || 'Tectonics', icon: Globe },
+                { num: 1, label: t.layer1Short.replace(/^[IVX]+\.\s*/, '').trim(), icon: Shield },
+                { num: 2, label: t.layer2Short.replace(/^[IVX]+\.\s*/, '').trim(), icon: Activity },
+                { num: 3, label: t.layer3Short.replace(/^[IVX]+\.\s*/, '').trim(), icon: Zap },
+                { num: 4, label: t.layer4Short.replace(/^[IVX]+\.\s*/, '').trim(), icon: Globe },
               ].map((l) => {
                 const Icon = l.icon;
                 return (
@@ -475,7 +475,7 @@ export const FeaturedDissectionBench: React.FC<FeaturedDissectionBenchProps> = (
                     }`}
                   >
                     <Icon className="w-4 h-4 flex-shrink-0" />
-                    <span className="text-[10px] uppercase font-bold truncate max-w-full">{l.label}</span>
+                    <span className="text-[10px] uppercase font-bold truncate max-w-full leading-tight">{l.label}</span>
                   </button>
                 );
               })}
